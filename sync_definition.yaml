@@ -1,0 +1,235 @@
+openapi: 3.0.0
+servers:
+  production:
+    url: our_clue_game_will_live_here.com
+    protocol: https  
+    description: This is the server for game state
+info:
+  description: This is the synchronous API definition for our server 
+  version: 1.0.0
+  title: OpenAPI Petstore
+
+paths:
+  /game:
+    post:
+      summary: Create a new game
+      description: 'Create a new game'
+      operationId: createGame
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/game'
+        '405':
+          description: Invalid input
+    
+  /game/{gameID}:
+    get:
+      summary: Find game by ID
+      description: Returns a game
+      operationId: getGameById
+      parameters:
+        - name: gameID
+          in: path
+          description: ID of game to return
+          required: true
+          schema:
+            $ref: "#/components/schemas/game_board_id"
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/game'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Game not found
+  
+  /game/{gameID}/player:
+    post:
+      summary: Create a new player
+      description: 'Create a new player'
+      operationId: createPlayer
+      parameters:
+        - name: gameId
+          in: path
+          description: ID of game to return
+          required: true
+          schema:
+            $ref: "#/components/schemas/game_board_id"      
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/player'
+        '405':
+          description: Invalid input
+
+  /game/{gameID}/player/{playerID}/move:
+    post:
+      summary: Create a new player move
+      description: 'Create a new player move'
+      operationId: movePlayer
+      parameters:
+        - name: gameId
+          in: path
+          description: ID of game to return
+          required: true
+          schema:
+            $ref: "#/components/schemas/game_board_id"  
+        - name: playerId
+          in: path
+          description: ID of player to return
+          required: true
+          schema:
+            $ref: "#/components/schemas/player_id"
+        - name: move
+          in: query
+          description: attempted move
+          required: true
+          schema:
+            $ref: "#/components/schemas/move"
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/game'
+        '405':
+          description: Invalid input / illegal move
+
+  /game/{gameID}/player/{playerID}/accusation:
+    post:
+      summary: Make an accusation
+      description: 'Create a new player accusation'
+      operationId: movePlayer
+      parameters:
+        - name: gameId
+          in: path
+          description: ID of game to return
+          required: true
+          schema:
+            $ref: "#/components/schemas/game_board_id"  
+        - name: playerId
+          in: path
+          description: ID of player to return
+          required: true
+          schema:
+            $ref: "#/components/schemas/player_id"
+        - name: accusation
+          in: query
+          description: the player's accusation
+          required: true
+          schema:
+            $ref: "#/components/schemas/card_set"
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/card_set'
+        '405':
+          description: Invalid input 
+
+  /game/{gameID}/player/{playerID}/suggestion:
+    post:
+      summary: Make a suggestion
+      description: 'Create a new player suggestion'
+      operationId: movePlayer
+      parameters:
+        - name: gameId
+          in: path
+          description: ID of game to return
+          required: true
+          schema:
+            $ref: "#/components/schemas/game_board_id"  
+        - name: playerId
+          in: path
+          description: ID of player to return
+          required: true
+          schema:
+            $ref: "#/components/schemas/player_id"
+        - name: suggestion
+          in: query
+          description: the player's suggestion
+          required: true
+          schema:
+            $ref: "#/components/schemas/card_set"
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/card_set'
+        '405':
+          description: Invalid input 
+
+
+
+schemas:
+  player:
+    description: An object which stores a player's unique ID, and which character they currently are
+    type: object
+    properties:
+      player_id:
+        type: string
+        format: UUID
+        description: a unique identifier for a player
+      character_name:
+        type: string
+        format: enum
+  
+  game_board_id:
+    type: string
+    format: UUID
+    description: a unique identifier for a game board
+  
+  sent_at:
+    type: string
+    format: date-time
+    description: Date and time when the message was sent.
+  
+  move:
+    type: number
+    format: integer
+    description: a numerical value representing the room or hallway the player is attempting to move to
+
+  card_set:
+    description: A set of cards representing a possible crime
+    type: object
+    properties:
+      player:
+        $ref: "#/components/schemas/player"
+      room:
+        type: string
+        format: enum
+      weapon:
+        type: string
+        format: enum
+      character_name:
+        type: string
+        format: enum
+
+  game:
+    title: a Game
+    description: A game playable on the the server 
+    type: object
+    properties:
+      game_board_id:
+        $ref: "#/components/schemas/game_board_id"
+      status:
+        type: string
+        description: pet status in the store
+        deprecated: true
+        enum:
+          - active
+          - finished

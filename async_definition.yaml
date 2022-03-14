@@ -1,0 +1,63 @@
+asyncapi: 2.2.0
+info:
+  title: Clue game client
+  version: '0.1.0'
+
+servers:
+  production:
+    url: our_clue_game_will_live_here.com
+    protocol: ws # websocket  
+    description: This is the message broker for game state subscriptions
+
+channels:
+  game_state:
+    publish:
+      message:
+        $ref: "#/components/messages/gameState"
+    subscribe:
+      message:
+        $ref: "#/components/messages/gameState"
+
+components:
+  messages:
+    gameState:
+      name: gameState
+      title: game state
+      summary: Inform about state of given game board
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: "#/components/schemas/game_state"
+  
+  messageTraits:
+    commonHeaders:
+      headers:
+        type: object
+        properties:
+          game_board_id:
+            $ref: "#/components/schemas/game_board_id"
+  
+  schemas:
+    gameState:
+      description: An event describing a game state update
+      type: object
+      additionalProperties: false
+      properties:
+        sent_at:
+          $ref: "#/components/schemas/sent_at"
+        game_board_id:
+          $ref: "#/components/schemas/game_board_id"
+        board:
+          type: array
+    game_board_id:
+      type: string
+      format: UUID
+      description: a unique identifier for a game board
+    sent_at:
+      type: string
+      format: date-time
+      description: Date and time when the message was sent.
+
+
+
