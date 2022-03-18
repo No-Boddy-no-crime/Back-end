@@ -71,6 +71,34 @@ paths:
         '405':
           description: Invalid input
 
+  /game/{gameID}/player/{playerID}:
+    get:
+      summary: Find a player
+      description: 'Find a  player'
+      operationId: findPlayer
+      parameters:
+        - name: gameId
+          in: path
+          description: ID of game to return
+          required: true
+          schema:
+            $ref: "#/components/schemas/game_board_id"     
+       - name: playerId
+          in: path
+          description: ID of player to return
+          required: true
+          schema:
+            $ref: "#/components/schemas/player_id" 
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/player'
+        '405':
+          description: Invalid input
+
   /game/{gameID}/player/{playerID}/move:
     post:
       summary: Create a new player move
@@ -169,7 +197,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/card_set'
+                $ref: '#/components/schemas/rebuttal_card'
         '405':
           description: Invalid input 
 
@@ -218,6 +246,16 @@ schemas:
       character_name:
         type: string
         format: enum
+
+  rebuttal_card:
+    description: The card someone responds to a suggestion with
+    type: object
+    properties:
+      player:
+          $ref: "#/components/schemas/player"
+      card:
+        type: string
+        format: enum 
 
   game:
     title: a Game
