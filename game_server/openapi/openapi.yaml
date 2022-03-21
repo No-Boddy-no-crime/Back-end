@@ -1,0 +1,328 @@
+openapi: 3.0.0
+info:
+  description: This is the synchronous API definition for our server
+  title: Game Server
+  version: 1.0.0
+servers:
+- description: This is the server for game state
+  url: our_clue_game_will_live_here.com
+paths:
+  /game:
+    post:
+      description: Create a new game
+      operationId: create_game
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/game'
+          description: successful operation
+        "405":
+          description: Invalid input
+      summary: Create a new game
+      x-openapi-router-controller: game_server.controllers.default_controller
+  /game/{gameId}:
+    get:
+      description: Returns a game
+      operationId: get_game_by_id
+      parameters:
+      - description: ID of game to return
+        explode: false
+        in: path
+        name: gameId
+        required: true
+        schema:
+          $ref: '#/components/schemas/game_board_id'
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/game'
+          description: successful operation
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Game not found
+      summary: Find game by ID
+      x-openapi-router-controller: game_server.controllers.default_controller
+  /game/{gameId}/player:
+    post:
+      description: Create a new player
+      operationId: create_player
+      parameters:
+      - description: ID of game to return
+        explode: false
+        in: path
+        name: gameId
+        required: true
+        schema:
+          $ref: '#/components/schemas/game_board_id'
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/player'
+          description: successful operation
+        "405":
+          description: Invalid input
+      summary: Create a new player
+      x-openapi-router-controller: game_server.controllers.default_controller
+  /game/{gameId}/player/{playerId}:
+    get:
+      description: Find a  player
+      operationId: find_player
+      parameters:
+      - description: ID of game to return
+        explode: false
+        in: path
+        name: gameId
+        required: true
+        schema:
+          $ref: '#/components/schemas/game_board_id'
+        style: simple
+      - description: ID of player to return
+        explode: false
+        in: path
+        name: playerId
+        required: true
+        schema:
+          $ref: '#/components/schemas/player_id'
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/player'
+          description: successful operation
+        "405":
+          description: Invalid input
+      summary: Find a player
+      x-openapi-router-controller: game_server.controllers.default_controller
+  /game/{gameId}/player/{playerId}/accusation:
+    post:
+      description: Create a new player accusation
+      operationId: make_accusation
+      parameters:
+      - description: ID of game to return
+        explode: false
+        in: path
+        name: gameId
+        required: true
+        schema:
+          $ref: '#/components/schemas/game_board_id'
+        style: simple
+      - description: ID of player to return
+        explode: false
+        in: path
+        name: playerId
+        required: true
+        schema:
+          $ref: '#/components/schemas/player_id'
+        style: simple
+      - description: the player's accusation
+        explode: true
+        in: query
+        name: accusation
+        required: true
+        schema:
+          $ref: '#/components/schemas/card_set'
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/card_set'
+          description: successful operation
+        "405":
+          description: Invalid input
+      summary: Make an accusation
+      x-openapi-router-controller: game_server.controllers.default_controller
+  /game/{gameId}/player/{playerId}/move:
+    post:
+      description: Create a new player move
+      operationId: move_player
+      parameters:
+      - description: ID of game to return
+        explode: false
+        in: path
+        name: gameId
+        required: true
+        schema:
+          $ref: '#/components/schemas/game_board_id'
+        style: simple
+      - description: ID of player to return
+        explode: false
+        in: path
+        name: playerId
+        required: true
+        schema:
+          $ref: '#/components/schemas/player_id'
+        style: simple
+      - description: attempted move
+        explode: true
+        in: query
+        name: move
+        required: true
+        schema:
+          $ref: '#/components/schemas/move'
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/game'
+          description: successful operation
+        "405":
+          description: Invalid input / illegal move
+      summary: Create a new player move
+      x-openapi-router-controller: game_server.controllers.default_controller
+  /game/{gameId}/player/{playerId}/suggestion:
+    post:
+      description: Create a new player suggestion
+      operationId: make_suggestion
+      parameters:
+      - description: ID of game to return
+        explode: false
+        in: path
+        name: gameId
+        required: true
+        schema:
+          $ref: '#/components/schemas/game_board_id'
+        style: simple
+      - description: ID of player to return
+        explode: false
+        in: path
+        name: playerId
+        required: true
+        schema:
+          $ref: '#/components/schemas/player_id'
+        style: simple
+      - description: the player's suggestion
+        explode: true
+        in: query
+        name: suggestion
+        required: true
+        schema:
+          $ref: '#/components/schemas/card_set'
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rebuttal_card'
+          description: successful operation
+        "405":
+          description: Invalid input
+      summary: Make a suggestion
+      x-openapi-router-controller: game_server.controllers.default_controller
+components:
+  schemas:
+    player:
+      description: An object which stores a player's unique ID, and which character
+        they currently are
+      example:
+        player_id: player_id
+        character_name: character_name
+      properties:
+        player_id:
+          description: a unique identifier for a player
+          format: UUID
+          title: player_id
+          type: string
+        character_name:
+          format: enum
+          title: character_name
+          type: string
+      title: player
+      type: object
+    player_id:
+      description: a unique identifier for a player
+      format: UUID
+      title: player_id
+      type: string
+    game_board_id:
+      description: a unique identifier for a game board
+      format: UUID
+      title: game_board_id
+      type: string
+    sent_at:
+      description: Date and time when the message was sent.
+      format: date-time
+      type: string
+    move:
+      description: a numerical value representing the room or hallway the player is
+        attempting to move to
+      format: integer
+      type: number
+    card_set:
+      description: A set of cards representing a possible crime
+      example:
+        weapon: weapon
+        character_name: character_name
+        room: room
+        player:
+          player_id: player_id
+          character_name: character_name
+      properties:
+        player:
+          $ref: '#/components/schemas/player'
+        room:
+          format: enum
+          title: room
+          type: string
+        weapon:
+          format: enum
+          title: weapon
+          type: string
+        character_name:
+          format: enum
+          title: character_name
+          type: string
+      title: card_set
+      type: object
+    rebuttal_card:
+      description: The card someone responds to a suggestion with
+      example:
+        card: card
+        player:
+          player_id: player_id
+          character_name: character_name
+      properties:
+        player:
+          $ref: '#/components/schemas/player'
+        card:
+          format: enum
+          title: card
+          type: string
+      title: rebuttal_card
+      type: object
+    game:
+      description: A game playable on the the server
+      example:
+        game_board_id: game_board_id
+        status: active
+      properties:
+        game_board_id:
+          description: a unique identifier for a game board
+          format: UUID
+          title: game_board_id
+          type: string
+        status:
+          deprecated: true
+          description: pet status in the store
+          enum:
+          - active
+          - finished
+          title: status
+          type: string
+      title: a Game
+      type: object

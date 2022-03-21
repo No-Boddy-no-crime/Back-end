@@ -1,3 +1,4 @@
+
 openapi: 3.0.0
 servers:
   - url: our_clue_game_will_live_here.com
@@ -5,7 +6,7 @@ servers:
 info:
   description: This is the synchronous API definition for our server 
   version: 1.0.0
-  title: OpenAPI Petstore
+  title: Game Server
 
 paths:
   /game:
