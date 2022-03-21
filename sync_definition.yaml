@@ -1,8 +1,6 @@
 openapi: 3.0.0
 servers:
-  production:
-    url: our_clue_game_will_live_here.com
-    protocol: https  
+  - url: our_clue_game_will_live_here.com
     description: This is the server for game state
 info:
   description: This is the synchronous API definition for our server 
@@ -25,13 +23,13 @@ paths:
         '405':
           description: Invalid input
     
-  /game/{gameID}:
+  /game/{gameId}:
     get:
       summary: Find game by ID
       description: Returns a game
       operationId: getGameById
       parameters:
-        - name: gameID
+        - name: gameId
           in: path
           description: ID of game to return
           required: true
@@ -49,7 +47,7 @@ paths:
         '404':
           description: Game not found
   
-  /game/{gameID}/player:
+  /game/{gameId}/player:
     post:
       summary: Create a new player
       description: 'Create a new player'
@@ -71,7 +69,7 @@ paths:
         '405':
           description: Invalid input
 
-  /game/{gameID}/player/{playerID}:
+  /game/{gameId}/player/{playerId}:
     get:
       summary: Find a player
       description: 'Find a  player'
@@ -82,8 +80,8 @@ paths:
           description: ID of game to return
           required: true
           schema:
-            $ref: "#/components/schemas/game_board_id"     
-       - name: playerId
+            $ref: "#/components/schemas/game_board_id"
+        - name: playerId
           in: path
           description: ID of player to return
           required: true
@@ -99,7 +97,7 @@ paths:
         '405':
           description: Invalid input
 
-  /game/{gameID}/player/{playerID}/move:
+  /game/{gameId}/player/{playerId}/move:
     post:
       summary: Create a new player move
       description: 'Create a new player move'
@@ -133,11 +131,11 @@ paths:
         '405':
           description: Invalid input / illegal move
 
-  /game/{gameID}/player/{playerID}/accusation:
+  /game/{gameId}/player/{playerId}/accusation:
     post:
       summary: Make an accusation
       description: 'Create a new player accusation'
-      operationId: movePlayer
+      operationId: makeAccusation
       parameters:
         - name: gameId
           in: path
@@ -167,11 +165,11 @@ paths:
         '405':
           description: Invalid input 
 
-  /game/{gameID}/player/{playerID}/suggestion:
+  /game/{gameId}/player/{playerId}/suggestion:
     post:
       summary: Make a suggestion
       description: 'Create a new player suggestion'
-      operationId: movePlayer
+      operationId: makeSuggestion
       parameters:
         - name: gameId
           in: path
@@ -202,72 +200,75 @@ paths:
           description: Invalid input 
 
 
-
-schemas:
-  player:
-    description: An object which stores a player's unique ID, and which character they currently are
-    type: object
-    properties:
-      player_id:
-        type: string
-        format: UUID
-        description: a unique identifier for a player
-      character_name:
-        type: string
-        format: enum
+components:
+  schemas:
+    player:
+      description: An object which stores a player's unique ID, and which character they currently are
+      type: object
+      properties:
+        player_id:
+          $ref: "#/components/schemas/player_id"
+        character_name:
+          type: string
+          format: enum
+    
+    player_id:
+      type: string
+      format: UUID
+      description: a unique identifier for a player
+    
+    game_board_id:
+      type: string
+      format: UUID
+      description: a unique identifier for a game board
+    
+    sent_at:
+      type: string
+      format: date-time
+      description: Date and time when the message was sent.
+    
+    move:
+      type: number
+      format: integer
+      description: a numerical value representing the room or hallway the player is attempting to move to
   
-  game_board_id:
-    type: string
-    format: UUID
-    description: a unique identifier for a game board
-  
-  sent_at:
-    type: string
-    format: date-time
-    description: Date and time when the message was sent.
-  
-  move:
-    type: number
-    format: integer
-    description: a numerical value representing the room or hallway the player is attempting to move to
-
-  card_set:
-    description: A set of cards representing a possible crime
-    type: object
-    properties:
-      player:
-        $ref: "#/components/schemas/player"
-      room:
-        type: string
-        format: enum
-      weapon:
-        type: string
-        format: enum
-      character_name:
-        type: string
-        format: enum
-
-  rebuttal_card:
-    description: The card someone responds to a suggestion with
-    type: object
-    properties:
-      player:
+    card_set:
+      description: A set of cards representing a possible crime
+      type: object
+      properties:
+        player:
           $ref: "#/components/schemas/player"
-      card:
-        type: string
-        format: enum 
-
-  game:
-    title: a Game
-    description: A game playable on the the server 
-    type: object
-    properties:
-      game_board_id:
-        $ref: "#/components/schemas/game_board_id"
-      status:
-        type: string
-        description: pet status in the store
-        deprecated: true
-        enum:
-          - active
-          - finished
+        room:
+          type: string
+          format: enum
+        weapon:
+          type: string
+          format: enum
+        character_name:
+          type: string
+          format: enum
+  
+    rebuttal_card:
+      description: The card someone responds to a suggestion with
+      type: object
+      properties:
+        player:
+            $ref: "#/components/schemas/player"
+        card:
+          type: string
+          format: enum 
+  
+    game:
+      title: a Game
+      description: A game playable on the the server 
+      type: object
+      properties:
+        game_board_id:
+          $ref: "#/components/schemas/game_board_id"
+        status:
+          type: string
+          description: pet status in the store
+          deprecated: true
+          enum:
+            - active
+            - finished
