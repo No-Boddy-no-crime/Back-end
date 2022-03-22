@@ -7,11 +7,6 @@ is an example of building a OpenAPI-enabled Flask server.
 
 This example uses the [Connexion](https://github.com/zalando/connexion) library on top of Flask.
 
-It was generates through the command 
-```
-openapi-generator generate -i sync_definition.yaml -g python-flask -o . --package-name game_server --api-package game_server
-```
-
 ## Requirements
 Python 3.5.2+
 
@@ -26,13 +21,13 @@ python3 -m game_server
 and open your browser to here:
 
 ```
-http://localhost:8080/ui/
+http://localhost:8080/v1/ui/
 ```
 
 Your OpenAPI definition lives here:
 
 ```
-http://localhost:8080/openapi.json
+http://localhost:8080/v1/openapi.json
 ```
 
 To launch the integration tests, use tox:

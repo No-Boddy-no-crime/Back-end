@@ -54,7 +54,7 @@ class CardSet(Model):
 
         :param dikt: A dict.
         :type: dict
-        :return: The card_set of this CardSet.  # noqa: E501
+        :return: The CardSet of this CardSet.  # noqa: E501
         :rtype: CardSet
         """
         return util.deserialize_model(dikt, cls)

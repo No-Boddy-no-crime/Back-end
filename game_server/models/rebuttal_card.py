@@ -44,7 +44,7 @@ class RebuttalCard(Model):
 
         :param dikt: A dict.
         :type: dict
-        :return: The rebuttal_card of this RebuttalCard.  # noqa: E501
+        :return: The RebuttalCard of this RebuttalCard.  # noqa: E501
         :rtype: RebuttalCard
         """
         return util.deserialize_model(dikt, cls)

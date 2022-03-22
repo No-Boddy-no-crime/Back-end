@@ -42,7 +42,7 @@ class Player(Model):
 
         :param dikt: A dict.
         :type: dict
-        :return: The player of this Player.  # noqa: E501
+        :return: The Player of this Player.  # noqa: E501
         :rtype: Player
         """
         return util.deserialize_model(dikt, cls)
@@ -51,7 +51,6 @@ class Player(Model):
     def player_id(self):
         """Gets the player_id of this Player.
 
-        a unique identifier for a player  # noqa: E501
 
         :return: The player_id of this Player.
         :rtype: str
@@ -62,7 +61,6 @@ class Player(Model):
     def player_id(self, player_id):
         """Sets the player_id of this Player.
 
-        a unique identifier for a player  # noqa: E501
 
         :param player_id: The player_id of this Player.
         :type player_id: str

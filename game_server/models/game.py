@@ -15,25 +15,35 @@ class Game(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, game_board_id=None, status=None):  # noqa: E501
+    def __init__(self, id=None, name=None, tag=None, status=None):  # noqa: E501
         """Game - a model defined in OpenAPI
 
-        :param game_board_id: The game_board_id of this Game.  # noqa: E501
-        :type game_board_id: str
+        :param id: The id of this Game.  # noqa: E501
+        :type id: int
+        :param name: The name of this Game.  # noqa: E501
+        :type name: str
+        :param tag: The tag of this Game.  # noqa: E501
+        :type tag: str
         :param status: The status of this Game.  # noqa: E501
         :type status: str
         """
         self.openapi_types = {
-            'game_board_id': str,
+            'id': int,
+            'name': str,
+            'tag': str,
             'status': str
         }
 
         self.attribute_map = {
-            'game_board_id': 'game_board_id',
+            'id': 'id',
+            'name': 'name',
+            'tag': 'tag',
             'status': 'status'
         }
 
-        self._game_board_id = game_board_id
+        self._id = id
+        self._name = name
+        self._tag = tag
         self._status = status
 
     @classmethod
@@ -42,39 +52,82 @@ class Game(Model):
 
         :param dikt: A dict.
         :type: dict
-        :return: The game of this Game.  # noqa: E501
+        :return: The Game of this Game.  # noqa: E501
         :rtype: Game
         """
         return util.deserialize_model(dikt, cls)
 
     @property
-    def game_board_id(self):
-        """Gets the game_board_id of this Game.
+    def id(self):
+        """Gets the id of this Game.
 
-        a unique identifier for a game board  # noqa: E501
 
-        :return: The game_board_id of this Game.
+        :return: The id of this Game.
+        :rtype: int
+        """
+        return self._id
+
+    @id.setter
+    def id(self, id):
+        """Sets the id of this Game.
+
+
+        :param id: The id of this Game.
+        :type id: int
+        """
+        if id is None:
+            raise ValueError("Invalid value for `id`, must not be `None`")  # noqa: E501
+
+        self._id = id
+
+    @property
+    def name(self):
+        """Gets the name of this Game.
+
+
+        :return: The name of this Game.
         :rtype: str
         """
-        return self._game_board_id
+        return self._name
 
-    @game_board_id.setter
-    def game_board_id(self, game_board_id):
-        """Sets the game_board_id of this Game.
+    @name.setter
+    def name(self, name):
+        """Sets the name of this Game.
 
-        a unique identifier for a game board  # noqa: E501
 
-        :param game_board_id: The game_board_id of this Game.
-        :type game_board_id: str
+        :param name: The name of this Game.
+        :type name: str
+        """
+        if name is None:
+            raise ValueError("Invalid value for `name`, must not be `None`")  # noqa: E501
+
+        self._name = name
+
+    @property
+    def tag(self):
+        """Gets the tag of this Game.
+
+
+        :return: The tag of this Game.
+        :rtype: str
+        """
+        return self._tag
+
+    @tag.setter
+    def tag(self, tag):
+        """Sets the tag of this Game.
+
+
+        :param tag: The tag of this Game.
+        :type tag: str
         """
 
-        self._game_board_id = game_board_id
+        self._tag = tag
 
     @property
     def status(self):
         """Gets the status of this Game.
 
-        pet status in the store  # noqa: E501
 
         :return: The status of this Game.
         :rtype: str
@@ -85,16 +138,9 @@ class Game(Model):
     def status(self, status):
         """Sets the status of this Game.
 
-        pet status in the store  # noqa: E501
 
         :param status: The status of this Game.
         :type status: str
         """
-        allowed_values = ["active", "finished"]  # noqa: E501
-        if status not in allowed_values:
-            raise ValueError(
-                "Invalid value for `status` ({0}), must be one of {1}"
-                .format(status, allowed_values)
-            )
 
         self._status = status
