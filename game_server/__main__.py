@@ -3,6 +3,7 @@
 import connexion
 
 from game_server import encoder
+from turn_server import create_socketio, socketio
 
 
 def main():
@@ -11,8 +12,8 @@ def main():
     app.add_api('openapi.yaml',
                 arguments={'title': 'Clue Game Server'},
                 pythonic_params=True)
-
-    app.run(port=8080)
+    create_socketio(app.app)
+    socketio.run(app,port=8080)
 
 
 if __name__ == '__main__':
