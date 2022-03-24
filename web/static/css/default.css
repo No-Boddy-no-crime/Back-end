@@ -1,0 +1,6 @@
+.messageDivs {
+	overflow-y: auto;
+	min-height: 100px;
+	max-height: 200px;
+	border: solid 2px;
+}

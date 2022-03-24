@@ -7,9 +7,10 @@ from turn_server import socketio
 game_state = {} # placeholder for game state json
 room_id = None
 
-
+'''
 @socketio.event
 def connect(message):
+    print('Server: in connect');
     """Handle incoming connection. Requires room_id which will be the game board unique identifier.
     This may not be necessary, it might be nice to map players/characters to session ids, but we might never use anyway."""
     global room_id
@@ -21,11 +22,13 @@ def connect(message):
 
 @socketio.event
 def gameTurn(): 
+    print('Server: in gameTurn');
     """Handles request for gameTurn"""
     emit('gameTurn', 'It is your turn', to=request.sid)
 
 @socketio.event
 def gameState():
+    print('Server: in gameState');
     """ Handles request for game state."""
     emit('GameState', game_state, to=request.sid)
-
+    '''
