@@ -72,4 +72,58 @@ function movePlayer() {
 
 }
 
+const initSyncCommButton = () => {
+    document.getElementById('get_games_id').onclick = function(){ listAllGames(compileListAllGamesPayload()); };
+    document.getElementById('start_game').onclick = function(){ startGames(); }
+    document.getElementById('join_game_id_button').onclick = function(){ getGame(); }
+}
+
+const compileListAllGamesPayload = () => {limit: document.getElementById('get_games_limit').value}
+
+const getGame = () => {
+    $.ajax(
+        {
+            url: `/v1/games/${document.getElementById('join_game_id').value}`, 
+            success: function(response) { 
+                console.log(response);
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status);
+                console.log(thrownError);
+            }
+        }
+   );
+}
+
+const listAllGames = (payload) =>{
+    $.ajax(
+        {
+            url: '/v1/games', 
+            data: payload, 
+            success: function(response) { 
+                console.log(response);
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status);
+                console.log(thrownError);
+            }
+        }
+   );
+}
+const startGames = () =>{
+    $.ajax(
+        {
+            url: '/v1/games', 
+            success: function(response) { 
+                console.log(response);
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status);
+                console.log(thrownError);
+            }
+        }
+   );
+}
+
+
 

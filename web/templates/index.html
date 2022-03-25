@@ -19,6 +19,7 @@
     <div id="syncDiv">
     <h1>Synchronous Flask Communication</h1>
         <p>Client and Server talking togther below. Click the buttons to emit a message to the server</p>
+        <button id='random'>Click Here</button>
         <div style="padding:10px; border:3px; border-style:solid; border-color:#000000; margin:10px;">
             <h3>Game Starting Actions:</h3>
             <form id="add_name" method="POST" action='#'>
@@ -30,12 +31,12 @@
             <p>Check available games:
                 <button type="button" id='check_games'>Available Games</button>
             </p>
-            <form id="join_game" method="POST" action='#'>
+            <div id="join_game">
                 <p>Join an available game:
                     <input type="text" name="join_game_id" id="join_game_id" placeholder="Game Name">
-                    <input type="submit" value="Enter">
+                    <input type="submit" value="Enter" id="join_game_id_button">
                 </p>
-            </form>
+            </div>
             <form id="create_game" method="POST" action='#'>
                 <p>Create a new game:
                     <input type="text" name="new_game_id" id="new_game_id" placeholder="Game Name">
@@ -53,6 +54,12 @@
             <p>Begin the game:
                 <button type="button" id='start_game'>Start Game</button>
             </p>
+            <div id="get_games">
+                <p>Get All Games:
+                    <input type="text" name="get_games_limit" id="get_games_limit" placeholder="Limit">
+                    <input type="submit" value="Enter" id="get_games_id">
+                </p>
+            </div>
         </div>
         <div style="padding:10px; border:3px; border-style:solid; border-color:#000000; margin:10px;">
             <h3>Turn Actions:</h3>
