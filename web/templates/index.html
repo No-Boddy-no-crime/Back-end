@@ -5,7 +5,9 @@
     <script src=https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js></script>
     <script src="static/js/default.js"></script>
     <script src="static/js/asyncComm.js"></script>
-    <script src="static/js/syncComm.js"></script>
+    <script src="static/js/syncComm.js">
+        selectAnyCharacter();
+    </script>
     <link rel="stylesheet" href="static/css/default.css">
 </head>
 <body>
@@ -15,9 +17,90 @@
         <div id="asyncServerMessages" class="messageDivs"></div>
     </div>
     <div id="syncDiv">
-        <h1>Synchronous Flask Communication</h1>
+    <h1>Synchronous Flask Communication</h1>
         <p>Client and Server talking togther below. Click the buttons to emit a message to the server</p>
-        <button type="button" id='button1'>Button Name Goes Here</button>
+        <div style="padding:10px; border:3px; border-style:solid; border-color:#000000; margin:10px;">
+            <h3>Game Starting Actions:</h3>
+            <form id="add_name" method="POST" action='#'>
+                <p>Add your name:
+                    <input type="text" name="name_string" id="name_string" placeholder="Insert Name">
+                    <input type="submit" value="Enter">
+                </p>
+            </form>
+            <p>Check available games:
+                <button type="button" id='check_games'>Available Games</button>
+            </p>
+            <form id="join_game" method="POST" action='#'>
+                <p>Join an available game:
+                    <input type="text" name="join_game_id" id="join_game_id" placeholder="Game Name">
+                    <input type="submit" value="Enter">
+                </p>
+            </form>
+            <form id="create_game" method="POST" action='#'>
+                <p>Create a new game:
+                    <input type="text" name="new_game_id" id="new_game_id" placeholder="Game Name">
+                    <input type="submit" value="Enter">
+                </p>
+            </form>
+            <p>Check available characters:
+                <button type="button" id='available_characters'>Availalble Characters</button>
+            </p>
+            <p>Select your character:
+                <select name="character_select" id="character_select" onclick="selectAnyCharacter()">
+                    <option value="default">--Character Select--</option>
+                </select>
+            </p>
+            <p>Begin the game:
+                <button type="button" id='start_game'>Start Game</button>
+            </p>
+        </div>
+        <div style="padding:10px; border:3px; border-style:solid; border-color:#000000; margin:10px;">
+            <h3>Turn Actions:</h3>
+            <p>Player movement:
+                <select name="move_player" id="move_player" onclick="getMovement()" onchange="movePlayer()">
+                    <option>--none selected--</option>
+                </select>
+            </p>
+            <form id="make_suggestion" method="POST" action='#'>
+                <p>Make a suggestion:
+                    <select name="character_select" id="character_select" onclick="selectAnyCharacter()">
+                        <option value="default">--Who--</option>
+                    </select>
+                    <select name="what_select" id="what_select" onclick="selectWeapon()">
+                        <option value="default">--What--</option>
+                    </select>
+                    <select name="where_select" id="where_select" onclick="selectRoom()">
+                        <option value="default">--Where--</option>
+                    </select>
+                    <button type="button" id='make_suggestion'>Make Suggestion</button>
+                </p>
+            </form>
+            <form id="make_accusation" method="POST" action='#'>
+                <p>Make an accusation:
+                    <select name="character_select" id="character_select" onclick="selectAnyCharacter()">
+                        <option value="default">--Who--</option>
+                    </select>
+                    <select name="what_select" id="what_select" onclick="selectAWeapon()">
+                        <option value="default">--What--</option>
+                    </select>
+                    <select name="where_select" id="where_select" onclick="selectARoom()">
+                        <option value="default">--Where--</option>
+                    </select>
+                    <button type="button" id='make_accusation'>Make Accusation</button>
+                </p>
+            </form>
+            <p>End player turn:
+                <button type="button" id='end_turn'>End Turn</button>
+            </p>
+        </div>
+        <div style="padding:10px; border:3px; border-style:solid; border-color:#000000; margin:10px;">
+            <h3>Off-Turn Actions:</h3>
+            <p>Get player cards:
+
+            </p>
+            <p>Disprove a suggestion:
+            </p>
+        </div>
         <div id="syncServerMessages" class="messageDivs"></div>
     </div>
     
