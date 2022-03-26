@@ -17,91 +17,86 @@
     <div id="syncDiv">
     <h1>Synchronous Flask Communication</h1>
         <p>Client and Server talking togther below. Click the buttons to emit a message to the server</p>
-        <div id="game_start" class="boundingBox">
-            <h3>Game Starting Actions:</h3>
-            <form id="add_name" method="POST" action='#'>
-                <p>Add your name:
-                    <input type="text" name="name_string" id="name_string" placeholder="Insert Name">
-                    <input type="submit" value="Enter">
+        <div id="game_control_actions" class="boundingBox">
+            <h3>Game Control Actions:</h3>
+            <div id="get_games">
+                <p>Get list of available Games:
+                    <input type="text" name="get_games_limit" id="get_games_limit" placeholder="Limit">
+                    <input type="submit" value="Enter" id="get_games_id_button">
                 </p>
-            </form>
-            <p>Check available games:
-                <button type="button" id='check_games'>Available Games</button>
-            </p>
-            <form id="join_game" method="POST" action='#'>
+            </div>
+            <div id="join_game">
                 <p>Join an available game:
                     <input type="text" name="join_game_id" id="join_game_id" placeholder="Game Name">
-                    <input type="submit" value="Enter">
+                    <input type="submit" value="Enter" id="join_game_id_button">
                 </p>
-            </form>
-            <form id="create_game" method="POST" action='#'>
-                <p>Create a new game:
-                    <input type="text" name="new_game_id" id="new_game_id" placeholder="Game Name">
-                    <input type="submit" value="Enter">
-                </p>
-            </form>
-            <p>Check available characters:
-                <button type="button" id='available_characters'>Availalble Characters</button>
-            </p>
-            <p>Select your character:
-                <select name="character_select" id="character_select" onclick="selectAnyCharacter()">
-                    <option value="default">--Character Select--</option>
-                </select>
-            </p>
-            <p>Begin the game:
-                <button type="button" id='start_game'>Start Game</button>
+            </div>
+            <p>Create a game:
+                <button type="button" id='create_game_button'>Create Game</button>
             </p>
         </div>
         <div class="boundingBox">
-            <h3>Turn Actions:</h3>
+            <h3>Player Control Actions:</h3>
+            <div id="create_player">
+                <p>Create a player:
+                    <input type="text" name="player_id_string" id="player_id_string" placeholder="Insert Name">
+                    <input type="text" name="game_id_string" id="game_id_string" placeholder="Game ID">
+                    <input type="submit" id="create_player_button" value="Create">
+                </p>
+            </div>
+            <p>Get player information:
+                <button type="button" id='player_info_button'>Enter</button>
+            </p>
+            <div id="selection_boxes">
+                <select name="who_select" id="who_select">
+                    <option>--Who--</option>
+                    <option>Miss Scarlet</option>
+                    <option>Col. Mustard</option>
+                    <option>Mrs. White</option>
+                    <option>Mr. Green</option>
+                    <option>Mrs. Peacock</option>
+                    <option>Prof. Plum</option>
+                </select>
+                <select name="what_select" id="what_select">
+                    <option>--What--</option>
+                    <option>Revolver</option>
+                    <option>Dagger</option>
+                    <option>Lead Pipe</option>
+                    <option>Rope</option>
+                    <option>Candlestick</option>
+                    <option>Wrench</option>
+                </select>
+                <select name="where_select" id="where_select">
+                    <option>--Where--</option>
+                    <option>Study</option>
+                    <option>Hall</option>
+                    <option>Lounge</option>
+                    <option>Library</option>
+                    <option>Billiard Room</option>
+                    <option>Dining Room</option>
+                    <option>Conservatory</option>
+                    <option>Ballroom</option>
+                    <option>Kitchen</option>
+                </select>
+            </div>
+            <div>
+                <button id='make_suggestion_button'>Make a Suggestion</button>
+                <button id='make_accusation_button'>Make an Accusation</button>
+            </div>
             <p>Player movement:
-                <select name="move_player" id="move_player" onclick="getMovement()" onchange="movePlayer()">
+                <select name="move_player_select" id="move_player_select">
                     <option>--none selected--</option>
+                    <option>Up</option>
+                    <option>Right</option>
+                    <option>Down</option>
+                    <option>Left</option>
+                    <option>Secret Passage</option>
                 </select>
-            </p>
-            <form id="make_suggestion" method="POST" action='#'>
-                <p>Make a suggestion:
-                    <select name="character_select" id="character_select" onclick="selectAnyCharacter()">
-                        <option value="default">--Who--</option>
-                    </select>
-                    <select name="what_select" id="what_select" onclick="selectWeapon()">
-                        <option value="default">--What--</option>
-                    </select>
-                    <select name="where_select" id="where_select" onclick="selectRoom()">
-                        <option value="default">--Where--</option>
-                    </select>
-                    <button type="button" id='make_suggestion'>Make Suggestion</button>
-                </p>
-            </form>
-            <form id="make_accusation" method="POST" action='#'>
-                <p>Make an accusation:
-                    <select name="character_select" id="character_select" onclick="selectAnyCharacter()">
-                        <option value="default">--Who--</option>
-                    </select>
-                    <select name="what_select" id="what_select" onclick="selectAWeapon()">
-                        <option value="default">--What--</option>
-                    </select>
-                    <select name="where_select" id="where_select" onclick="selectARoom()">
-                        <option value="default">--Where--</option>
-                    </select>
-                    <button type="button" id='make_accusation'>Make Accusation</button>
-                </p>
-            </form>
-            <p>End player turn:
-                <button type="button" id='end_turn'>End Turn</button>
-            </p>
-        </div>
-        <div class="boundingBox">
-            <h3>Off-Turn Actions:</h3>
-            <p>Get player cards:
-
-            </p>
-            <p>Disprove a suggestion:
+                <button type="button" id='move_player_button'>Move</button>
             </p>
         </div>
         <div id="syncServerMessages" class="messageDivs"></div>
     </div>
-    
 </div>
 </body>
 </html>

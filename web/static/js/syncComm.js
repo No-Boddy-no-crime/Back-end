@@ -1,75 +1,151 @@
-var character_array = [
-    "Miss Scarlet",
-    "Col. Mustard",
-    "Mrs. White",
-    "Mr. Green",
-    "Mrs. Peacock",
-    "Prof. Plum"
-];
+const initSyncCommButton = () => {
+    document.getElementById('get_games_id_button').onclick = function(){ listAllGames(compileListAllGamesPayload()); };
+    document.getElementById('join_game_id_button').onclick = function(){ getGame(); }
+    document.getElementById('create_game_button').onclick = function(){ createGame(); }
 
-var weapon_array = [
-    "Revolver",
-    "Dagger",
-    "Lead Pipe",
-    "Rope",
-    "Candlestick",
-    "Wrench"
-];
+    document.getElementById('create_player_button').onclick = function(){ createPlayer(); }
+    document.getElementById('make_accusation_button').onclick = function(){ makeAccusation(compilePlayerGuessPayload()); }
+    document.getElementById('make_suggestion_button').onclick = function(){ makeSuggestion(compilePlayerGuessPayload()); }
+    document.getElementById('move_player_button').onclick = function(){ movePlayer(compilePlayerMovementPayload()); }
+    document.getElementById('player_info_button').onclick = function(){ getPlayerInfo(); }
+}
 
-var location_array = [
-    "Study",
-    "Hall",
-    "Lounge",
-    "Library",
-    "Billiard Room",
-    "Dining Room",
-    "Conservatory",
-    "Ballroom",
-    "Kitchen"
-];
+const compileListAllGamesPayload = () => {limit: document.getElementById('get_games_limit').value}
 
-var movement_array = [
-    "Up",
-    "Right",
-    "Down",
-    "Left",
-    "Secret Passage"
-];
+const compilePlayerGuessPayload = () => {
+    var who = document.getElementById('who_select').value
+    var what = document.getElementById('what_select').value
+    var where = document.getElementById('where_select').value
 
-function selectAnyCharacter() {
-    var select = document.getElementById("character_select");
-    
-    for(var i = 0; i < character_array.length; i++) {
-        var opt = character_array[i];
-        var el = document.createElement("option");
-        el.textContent = opt;
-        el.value = opt;
-        select.appendChild(el);
-    }
+    // Create payload
 };
 
-function selectWeapon() {
+const compilePlayerMovementPayload = () => {
+    var movement = document.getElementById('move_player_select').value
 
+    // Create payload
 }
 
-function selectRoom() {
-    
+const getGame = () => {
+    $.ajax(
+        {
+            url: `/v1/games/${document.getElementById('join_game_id').value}`, 
+            success: function(response) { 
+                console.log(response);
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status);
+                console.log(thrownError);
+            }
+        }
+   );
 }
 
-function getMovement() {
-    var select = document.getElementById("move_player");
-    
-    for(var i = 0; i < movement_array.length; i++) {
-        var opt = movement_array[i];
-        var el = document.createElement("option");
-        el.textContent = opt;
-        el.value = opt;
-        select.appendChild(el);
-    }
+const listAllGames = (payload) =>{
+    $.ajax(
+        {
+            url: '/v1/games', 
+            data: payload, 
+            success: function(response) { 
+                console.log(response);
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status);
+                console.log(thrownError);
+            }
+        }
+   );
 }
 
-function movePlayer() {
-
+const createGame = () =>{
+    $.ajax(
+        {
+            url: '/v1/games', 
+            success: function(response) { 
+                console.log(response);
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status);
+                console.log(thrownError);
+            }
+        }
+   );
 }
 
+const createPlayer = () => {
+    $.ajax(
+        {
+            url: `/v1/games/${document.getElementById('game_id_string').value}/player`, 
+            success: function(response) { 
+                console.log(response);
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status);
+                console.log(thrownError);
+            }
+        }
+   );
+}
 
+const makeAccusation = (payload) => {
+    $.ajax(
+        {
+            url: `/v1/games/${document.getElementById('game_id_string').value}/player/${document.getElementById('player_id_string').value}/accusation`, 
+            data: payload, 
+            success: function(response) { 
+                console.log(response);
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status);
+                console.log(thrownError);
+            }
+        }
+   );
+}
+
+const makeSuggestion = (payload) => {
+    $.ajax(
+        {
+            url: `/v1/games/${document.getElementById('game_id_string').value}/player/${document.getElementById('player_id_string').value}/suggestion`, 
+            data: payload, 
+            success: function(response) { 
+                console.log(response);
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status);
+                console.log(thrownError);
+            }
+        }
+   );
+}
+
+const movePlayer = (payload) => {
+    $.ajax(
+        {
+            url: `/v1/games/${document.getElementById('game_id_string').value}/player/${document.getElementById('player_id_string').value}/move`, 
+            data: payload, 
+            success: function(response) { 
+                console.log(response);
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status);
+                console.log(thrownError);
+            }
+        }
+   );
+}
+
+const getPlayerInfo = () => {
+    $.ajax(
+        {
+            url: `/v1/games/${document.getElementById('game_id_string').value}/player/${document.getElementById('player_id_string').value}`, 
+            success: function(response) { 
+                console.log(response);
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status);
+                console.log(thrownError);
+            }
+        }
+   );
+}
