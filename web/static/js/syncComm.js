@@ -13,9 +13,9 @@ const initSyncCommButton = () => {
 const compileListAllGamesPayload = () => {limit: document.getElementById('get_games_limit').value}
 
 const compilePlayerGuessPayload = () => {
-    character_name: document.getElementById('who_select').value,
-    weapon: document.getElementById('what_select').value,
-    room: document.getElementById('where_select').value
+    character_name: document.getElementById('who_select').value;
+    weapon: document.getElementById('what_select').value;
+    room: document.getElementById('where_select').value;
 }
 
 const compilePlayerMovementPayload = () => {move: document.getElementById('move_player_select').value}
@@ -81,6 +81,21 @@ const createPlayer = () => {
    );
 }
 
+const getPlayerInfo = () => {
+    $.ajax(
+        {
+            url: `/v1/games/${document.getElementById('game_id_string').value}/player/${document.getElementById('player_id_string').value}`, 
+            success: function(response) { 
+                console.log(response);
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status);
+                console.log(thrownError);
+            }
+        }
+   );
+}
+
 const makeAccusation = (payload) => {
     $.ajax(
         {
@@ -118,21 +133,6 @@ const movePlayer = (payload) => {
         {
             url: `/v1/games/${document.getElementById('game_id_string').value}/player/${document.getElementById('player_id_string').value}/move`, 
             data: payload, 
-            success: function(response) { 
-                console.log(response);
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                console.log(xhr.status);
-                console.log(thrownError);
-            }
-        }
-   );
-}
-
-const getPlayerInfo = () => {
-    $.ajax(
-        {
-            url: `/v1/games/${document.getElementById('game_id_string').value}/player/${document.getElementById('player_id_string').value}`, 
             success: function(response) { 
                 console.log(response);
             },
