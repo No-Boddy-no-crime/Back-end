@@ -13,18 +13,12 @@ const initSyncCommButton = () => {
 const compileListAllGamesPayload = () => {limit: document.getElementById('get_games_limit').value}
 
 const compilePlayerGuessPayload = () => {
-    var who = document.getElementById('who_select').value
-    var what = document.getElementById('what_select').value
-    var where = document.getElementById('where_select').value
-
-    // Create payload
-};
-
-const compilePlayerMovementPayload = () => {
-    var movement = document.getElementById('move_player_select').value
-
-    // Create payload
+    character_name: document.getElementById('who_select').value,
+    weapon: document.getElementById('what_select').value,
+    room: document.getElementById('where_select').value
 }
+
+const compilePlayerMovementPayload = () => {move: document.getElementById('move_player_select').value}
 
 const getGame = () => {
     $.ajax(
