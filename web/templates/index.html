@@ -5,9 +5,7 @@
     <script src=https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js></script>
     <script src="static/js/default.js"></script>
     <script src="static/js/asyncComm.js"></script>
-    <script src="static/js/syncComm.js">
-        selectAnyCharacter();
-    </script>
+    <script src="static/js/syncComm.js"></script>
     <link rel="stylesheet" href="static/css/default.css">
 </head>
 <body>
@@ -19,7 +17,7 @@
     <div id="syncDiv">
     <h1>Synchronous Flask Communication</h1>
         <p>Client and Server talking togther below. Click the buttons to emit a message to the server</p>
-        <div style="padding:10px; border:3px; border-style:solid; border-color:#000000; margin:10px;">
+        <div id="game_start" class="boundingBox">
             <h3>Game Starting Actions:</h3>
             <form id="add_name" method="POST" action='#'>
                 <p>Add your name:
@@ -54,7 +52,7 @@
                 <button type="button" id='start_game'>Start Game</button>
             </p>
         </div>
-        <div style="padding:10px; border:3px; border-style:solid; border-color:#000000; margin:10px;">
+        <div class="boundingBox">
             <h3>Turn Actions:</h3>
             <p>Player movement:
                 <select name="move_player" id="move_player" onclick="getMovement()" onchange="movePlayer()">
@@ -93,7 +91,7 @@
                 <button type="button" id='end_turn'>End Turn</button>
             </p>
         </div>
-        <div style="padding:10px; border:3px; border-style:solid; border-color:#000000; margin:10px;">
+        <div class="boundingBox">
             <h3>Off-Turn Actions:</h3>
             <p>Get player cards:
 
