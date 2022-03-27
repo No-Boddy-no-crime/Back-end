@@ -32,7 +32,7 @@ def create_game():
             "status": "new",
             "players": []}
     get_games_collection().insert_one(game)
-    return game.pop("_id")
+    return game
 
 def get_games(limit = None):
     if limit:
