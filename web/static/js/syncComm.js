@@ -69,7 +69,7 @@ const createGame = () =>{
 const createPlayer = () => {
     $.ajax(
         {
-            url: `/v1/games/${document.getElementById('game_id_string').value}/player`, 
+            url: `/v1/games/${document.getElementById('game_id_string').value}/players/${document.getElementById('player_id_string').value}`, 
             success: function(response) { 
                 console.log(response);
             },
@@ -84,7 +84,7 @@ const createPlayer = () => {
 const getPlayerInfo = () => {
     $.ajax(
         {
-            url: `/v1/games/${document.getElementById('game_id_string').value}/player/${document.getElementById('player_id_string').value}`, 
+            url: `/v1/games/${document.getElementById('game_id_string').value}/players`, 
             success: function(response) { 
                 console.log(response);
             },
@@ -99,7 +99,7 @@ const getPlayerInfo = () => {
 const makeAccusation = (payload) => {
     $.ajax(
         {
-            url: `/v1/games/${document.getElementById('game_id_string').value}/player/${document.getElementById('player_id_string').value}/accusation`, 
+            url: `/v1/games/${document.getElementById('game_id_string').value}/players/${document.getElementById('player_id_string').value}/accusation`, 
             data: payload, 
             success: function(response) { 
                 console.log(response);
@@ -115,7 +115,7 @@ const makeAccusation = (payload) => {
 const makeSuggestion = (payload) => {
     $.ajax(
         {
-            url: `/v1/games/${document.getElementById('game_id_string').value}/player/${document.getElementById('player_id_string').value}/suggestion`, 
+            url: `/v1/games/${document.getElementById('game_id_string').value}/players/${document.getElementById('player_id_string').value}/suggestion`, 
             data: payload, 
             success: function(response) { 
                 console.log(response);
@@ -131,7 +131,7 @@ const makeSuggestion = (payload) => {
 const movePlayer = (payload) => {
     $.ajax(
         {
-            url: `/v1/games/${document.getElementById('game_id_string').value}/player/${document.getElementById('player_id_string').value}/move`, 
+            url: `/v1/games/${document.getElementById('game_id_string').value}/players/${document.getElementById('player_id_string').value}/move`, 
             data: payload, 
             success: function(response) { 
                 console.log(response);
