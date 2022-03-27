@@ -1,5 +1,5 @@
 import random
-from flask import Flask
+from flask import Flask, json
 from flask_pymongo import PyMongo
 import pymongo
 
@@ -24,7 +24,7 @@ def get_games_collection():
     return MONGO_DB.get_collection("Games")
 
 
-def create_game():
+def create_game(init = False):
     game_id = random.randint(0, 500)
     game = {"game_board_id": game_id, 
             "name": "This is our game name",
@@ -32,7 +32,11 @@ def create_game():
             "status": "new",
             "players": []}
     get_games_collection().insert_one(game)
-    return game
+
+    if init:
+        return game
+    else:
+        return "Game Created with game id: " + str(game_id)
 
 def get_games(limit = None):
     if limit:
@@ -83,7 +87,7 @@ def main():
     pp = pprint.PrettyPrinter()
     __test_mongo()
     games = get_games()
-    game = create_game()
+    game = create_game(True)
     game_id = game["game_board_id"]
     player = create_player(game_board_id=game_id)
     player_id = player["player_id"]
