@@ -44,5 +44,5 @@ def gameTurn(arg1):
 def gameState(arg2):
     print('Server: in gameState')
     """ Handles request for game state."""
-    emit('gameState', game_state, to=request.sid)
+    emit('GameState', game_state, to=request.sid)
     
