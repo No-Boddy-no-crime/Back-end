@@ -11,3 +11,4 @@ setuptools >= 21.0.0
 Flask == 1.1.2
 simple-websocket == 0.5.1
 Flask-SocketIO == 5.1.1
+Flask-PyMongo==2.3.0
