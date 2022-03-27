@@ -25,7 +25,7 @@ const getGame = () => {
         {
             url: `/v1/games/${document.getElementById('join_game_id').value}`, 
             success: function(response) { 
-                console.log(response);
+                appendServerResponse2(`Get Game ${document.getElementById('join_game_id').value}: ` + JSON.stringify(response))
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 console.log(xhr.status);
@@ -39,9 +39,10 @@ const listAllGames = (payload) =>{
     $.ajax(
         {
             url: '/v1/games', 
+            type: 'GET',
             data: payload, 
             success: function(response) { 
-                console.log(response);
+                appendServerResponse2('List All Games: ' + JSON.stringify(response));
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 console.log(xhr.status);
@@ -57,7 +58,7 @@ const createGame = () =>{
             url: '/v1/games', 
             type: 'POST',
             success: function(response) { 
-                console.log(response);
+                appendServerResponse2(`Created game: ` + JSON.stringify(response))
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 console.log(xhr.status);
@@ -73,7 +74,7 @@ const createPlayer = () => {
             url: `/v1/games/${document.getElementById('game_id_string_create_player').value}/players`, 
             type: 'POST',
             success: function(response) { 
-                console.log(response);
+                appendServerResponse2(`Created player: ` + JSON.stringify(response))
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 console.log(xhr.status);
@@ -88,7 +89,7 @@ const getPlayerInfo = () => {
         {
             url: `/v1/games/${document.getElementById('game_id_string_get_player').value}/players/${document.getElementById('player_id_string_get_player').value}`, 
             success: function(response) { 
-                console.log(response);
+                appendServerResponse2(`Got Player info: ` + JSON.stringify(response))
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 console.log(xhr.status);
@@ -105,7 +106,7 @@ const makeAccusation = (payload) => {
             data: payload, 
             type: 'POST',
             success: function(response) { 
-                console.log(response);
+                appendServerResponse2(`Made accusation: ` + JSON.stringify(response))
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 console.log(xhr.status);
@@ -122,7 +123,7 @@ const makeSuggestion = (payload) => {
             data: payload, 
             type: 'POST',
             success: function(response) { 
-                console.log(response);
+                appendServerResponse2(`Made suggestion: ` + JSON.stringify(response))
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 console.log(xhr.status);
@@ -139,7 +140,7 @@ const movePlayer = (payload) => {
             data: payload, 
             type: 'POST',
             success: function(response) { 
-                console.log(response);
+                appendServerResponse2(`Moved player: ` + JSON.stringify(response))
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 console.log(xhr.status);
@@ -147,4 +148,10 @@ const movePlayer = (payload) => {
             }
         }
    );
+}
+const appendServerResponse2 = (msg) => {
+	if(msg == undefined) return
+	const div = document.createElement('div')
+	div.innerText = msg
+	document.getElementById('syncServerMessages').append(div)
 }
