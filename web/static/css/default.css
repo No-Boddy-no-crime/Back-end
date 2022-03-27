@@ -1,0 +1,14 @@
+.messageDivs {
+	overflow-y: auto;
+	min-height: 100px;
+	max-height: 200px;
+	border: solid 2px;
+}
+
+.boundingBox{
+	padding:10px; 
+	border:3px; 
+	border-style:solid; 
+	border-color:#000000; 
+	margin:10px;
+}

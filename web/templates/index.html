@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src=https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js></script>
+    <script src="static/js/default.js"></script>
+    <script src="static/js/asyncComm.js"></script>
+    <script src="static/js/syncComm.js"></script>
+    <link rel="stylesheet" href="static/css/default.css">
+</head>
+<body>
+    <div id="asyncDiv">
+        <h1>Asynchronous Flask Communication</h1>
+        <p>Client and Server talking togther below.</p>
+        <div id="asyncServerMessages" class="messageDivs"></div>
+    </div>
+    <div id="syncDiv">
+    <h1>Synchronous Flask Communication</h1>
+        <p>Client and Server talking togther below. Click the buttons to emit a message to the server</p>
+        <div id="game_control_actions" class="boundingBox">
+            <h3>Game Control Actions:</h3>
+            <div id="get_games">
+                <p>Get list of available Games:
+                    <input type="text" name="get_games_limit" id="get_games_limit" placeholder="Limit">
+                    <input type="submit" value="Enter" id="get_games_id_button">
+                </p>
+            </div>
+            <div id="join_game">
+                <p>Join an available game:
+                    <input type="text" name="join_game_id" id="join_game_id" placeholder="Game Name">
+                    <input type="submit" value="Enter" id="join_game_id_button">
+                </p>
+            </div>
+            <p>Create a game:
+                <button type="button" id='create_game_button'>Create Game</button>
+            </p>
+        </div>
+        <div class="boundingBox">
+            <h3>Player Control Actions:</h3>
+            <div id="create_player">
+                <p>Create a player:
+                    <input type="text" name="player_id_string" id="player_id_string" placeholder="Insert Name">
+                    <input type="text" name="game_id_string" id="game_id_string" placeholder="Game ID">
+                    <input type="submit" id="create_player_button" value="Create">
+                </p>
+            </div>
+            <p>Get player information:
+                <button type="button" id='player_info_button'>Enter</button>
+            </p>
+            <div id="selection_boxes">
+                <select name="who_select" id="who_select">
+                    <option>--Who--</option>
+                    <option>Miss Scarlet</option>
+                    <option>Col. Mustard</option>
+                    <option>Mrs. White</option>
+                    <option>Mr. Green</option>
+                    <option>Mrs. Peacock</option>
+                    <option>Prof. Plum</option>
+                </select>
+                <select name="what_select" id="what_select">
+                    <option>--What--</option>
+                    <option>Revolver</option>
+                    <option>Dagger</option>
+                    <option>Lead Pipe</option>
+                    <option>Rope</option>
+                    <option>Candlestick</option>
+                    <option>Wrench</option>
+                </select>
+                <select name="where_select" id="where_select">
+                    <option>--Where--</option>
+                    <option>Study</option>
+                    <option>Hall</option>
+                    <option>Lounge</option>
+                    <option>Library</option>
+                    <option>Billiard Room</option>
+                    <option>Dining Room</option>
+                    <option>Conservatory</option>
+                    <option>Ballroom</option>
+                    <option>Kitchen</option>
+                </select>
+            </div>
+            <div>
+                <button id='make_suggestion_button'>Make a Suggestion</button>
+                <button id='make_accusation_button'>Make an Accusation</button>
+            </div>
+            <p>Player movement:
+                <select name="move_player_select" id="move_player_select">
+                    <option>--none selected--</option>
+                    <option>Up</option>
+                    <option>Right</option>
+                    <option>Down</option>
+                    <option>Left</option>
+                    <option>Secret Passage</option>
+                </select>
+                <button type="button" id='move_player_button'>Move</button>
+            </p>
+        </div>
+        <div id="syncServerMessages" class="messageDivs"></div>
+    </div>
+</div>
+</body>
+</html>
