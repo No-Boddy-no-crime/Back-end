@@ -6,7 +6,7 @@ from game_server import encoder
 from game_server.db.database import setup_db
 from flask import g, json, render_template
 from flask_pymongo import PyMongo
-from turn_server import create_socketio, socketio
+from turn_server.turn_server import create_socketio, socketio
 
 app = connexion.App(__name__, specification_dir='./openapi/')
 
