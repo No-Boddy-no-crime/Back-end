@@ -4,6 +4,7 @@ import six
 from game_server.models.error import Error  # noqa: E501
 from game_server.models.game import Game  # noqa: E501
 from game_server import util
+import game_server.db.database as db
 
 
 def create_game():  # noqa: E501
@@ -14,7 +15,7 @@ def create_game():  # noqa: E501
 
     :rtype: Game
     """
-    return 'do some magic!'
+    return db.create_game()
 
 
 def list_games(limit=None):  # noqa: E501
@@ -27,8 +28,8 @@ def list_games(limit=None):  # noqa: E501
 
     :rtype: List[Game]
     """
-    return 'do some magic!'
-
+    print(db.get_games(limit=limit))
+    return db.get_games(limit=limit)
 
 def show_game_by_id(game_id):  # noqa: E501
     """Info for a specific game
@@ -40,4 +41,5 @@ def show_game_by_id(game_id):  # noqa: E501
 
     :rtype: Game
     """
-    return 'do some magic!'
+    print(db.get_game(game_board_id=game_id))
+    return db.get_game(game_board_id=game_id)

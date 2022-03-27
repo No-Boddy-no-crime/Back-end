@@ -75,7 +75,7 @@ paths:
         name: gameId
         required: true
         schema:
-          type: string
+          type: number
         style: simple
       responses:
         "200":
@@ -96,7 +96,7 @@ paths:
       tags:
       - games
       x-openapi-router-controller: game_server.controllers.games_controller
-  /games/{gameId}/player:
+  /games/{gameId}/players:
     post:
       operationId: create_player
       parameters:
@@ -106,7 +106,7 @@ paths:
         name: gameId
         required: true
         schema:
-          type: string
+          type: number
         style: simple
       responses:
         "200":
@@ -125,7 +125,7 @@ paths:
       tags:
       - player
       x-openapi-router-controller: game_server.controllers.player_controller
-  /games/{gameId}/player/{playerId}:
+  /games/{gameId}/players/{playerId}:
     get:
       operationId: show_player_by_id
       parameters:
@@ -135,7 +135,7 @@ paths:
         name: gameId
         required: true
         schema:
-          type: string
+          type: number
         style: simple
       - description: The id of the player to retrieve
         explode: false
@@ -143,7 +143,7 @@ paths:
         name: playerId
         required: true
         schema:
-          type: string
+          type: number
         style: simple
       responses:
         "200":
@@ -166,7 +166,7 @@ paths:
       tags:
       - player
       x-openapi-router-controller: game_server.controllers.player_controller
-  /games/{gameId}/player/{playerId}/accusation:
+  /games/{gameId}/players/{playerId}/accusation:
     post:
       operationId: make_accusation
       parameters:
@@ -176,7 +176,7 @@ paths:
         name: gameId
         required: true
         schema:
-          type: string
+          type: number
         style: simple
       - description: The id of the player to retrieve
         explode: false
@@ -184,7 +184,7 @@ paths:
         name: playerId
         required: true
         schema:
-          type: string
+          type: number
         style: simple
       responses:
         "201":
@@ -207,7 +207,7 @@ paths:
       tags:
       - player
       x-openapi-router-controller: game_server.controllers.player_controller
-  /games/{gameId}/player/{playerId}/move:
+  /games/{gameId}/players/{playerId}/move:
     post:
       operationId: move_player
       parameters:
@@ -217,7 +217,7 @@ paths:
         name: gameId
         required: true
         schema:
-          type: string
+          type: number
         style: simple
       - description: The id of the player to retrieve
         explode: false
@@ -225,7 +225,7 @@ paths:
         name: playerId
         required: true
         schema:
-          type: string
+          type: number
         style: simple
       responses:
         "201":
@@ -248,7 +248,7 @@ paths:
       tags:
       - player
       x-openapi-router-controller: game_server.controllers.player_controller
-  /games/{gameId}/player/{playerId}/suggestion:
+  /games/{gameId}/players/{playerId}/suggestion:
     post:
       operationId: make_suggestion
       parameters:
@@ -258,7 +258,7 @@ paths:
         name: gameId
         required: true
         schema:
-          type: string
+          type: number
         style: simple
       - description: The id of the player to retrieve
         explode: false
@@ -266,7 +266,7 @@ paths:
         name: playerId
         required: true
         schema:
-          type: string
+          type: number
         style: simple
       responses:
         "201":
@@ -294,9 +294,6 @@ components:
     Player:
       description: An object which stores a player's unique ID, and which character
         they currently are
-      example:
-        player_id: player_id
-        character_name: character_name
       properties:
         player_id:
           format: int64
@@ -339,25 +336,26 @@ components:
           type: string
       type: object
     Game:
-      example:
-        name: name
-        id: 0
-        tag: tag
-        status: status
       properties:
-        id:
+        game_board_id:
           format: int64
           title: id
           type: integer
         name:
           title: name
           type: string
-        tag:
-          title: tag
-          type: string
+        board:
+          title: board
+          type: array
+          items:
+            $ref: '#/components/schemas/CardSet'
         status:
           title: status
           type: string
+        players:
+          type: array
+          items:
+            $ref: '#/components/schemas/Player'
       required:
       - id
       - name

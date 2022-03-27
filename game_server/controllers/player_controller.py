@@ -5,7 +5,7 @@ from game_server.models.error import Error  # noqa: E501
 from game_server.models.player import Player  # noqa: E501
 from game_server.models.rebuttal_card import RebuttalCard  # noqa: E501
 from game_server import util
-from game_server.db.database import get_db
+import game_server.db.database as db
 
 def create_player(game_id):  # noqa: E501
     """Join a game as a player
@@ -17,7 +17,7 @@ def create_player(game_id):  # noqa: E501
 
     :rtype: Player
     """
-    return 'do some magic!'
+    return db.create_player(game_id=game_id)
 
 
 def make_accusation(game_id, player_id):  # noqa: E501
@@ -32,7 +32,7 @@ def make_accusation(game_id, player_id):  # noqa: E501
 
     :rtype: Player
     """
-    return 'do some magic!'
+    return 'an accusation!'
 
 
 def make_suggestion(game_id, player_id):  # noqa: E501
@@ -47,7 +47,7 @@ def make_suggestion(game_id, player_id):  # noqa: E501
 
     :rtype: RebuttalCard
     """
-    return 'do some magic!'
+    return 'a suggestion!'
 
 
 def move_player(game_id, player_id):  # noqa: E501
@@ -62,7 +62,7 @@ def move_player(game_id, player_id):  # noqa: E501
 
     :rtype: Player
     """
-    return 'do some magic!'
+    return 'a move!'
 
 
 def show_player_by_id(game_id, player_id):  # noqa: E501
@@ -77,4 +77,4 @@ def show_player_by_id(game_id, player_id):  # noqa: E501
 
     :rtype: Player
     """
-    return 'do some magic!'
+    return db.get_player(game_board_id=game_id, player_id=player_id)
