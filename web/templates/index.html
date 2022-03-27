@@ -25,29 +25,32 @@
                     <input type="submit" value="Enter" id="get_games_id_button">
                 </p>
             </div>
+            <p>Create a game:
+                <button type="button" id='create_game_button'>Create Game</button>
+            </p>
             <div id="join_game">
-                <p>Join an available game:
+                <p>Retrieve an available game:
                     <input type="text" name="join_game_id" id="join_game_id" placeholder="Game Id">
                     <input type="submit" value="Enter" id="join_game_id_button">
                 </p>
             </div>
-            <p>Create a game:
-                <button type="button" id='create_game_button'>Create Game</button>
-            </p>
         </div>
         <div class="boundingBox">
             <h3>Player Control Actions:</h3>
             <div id="create_player">
                 <p>Create a player:
-                    <input type="text" name="player_id_string" id="player_id_string" placeholder="Insert Name">
-                    <input type="text" name="game_id_string" id="game_id_string" placeholder="Game ID">
+                    <input type="text" name="game_id_string" id="game_id_string_create_player" placeholder="Game ID">
                     <input type="submit" id="create_player_button" value="Create">
                 </p>
             </div>
             <p>Get player information:
+                <input type="text" name="game_id_string" id="game_id_string_get_player" placeholder="Game ID">
+                <input type="text" name="player_id_string" id="player_id_string_get_player" placeholder="Player ID">
                 <button type="button" id='player_info_button'>Enter</button>
             </p>
             <div id="selection_boxes">
+                <input type="text" name="game_id_string" id="game_id_accSug" placeholder="Game ID">
+                <input type="text" name="player_id_string" id="player_id_accSug" placeholder="Player ID">
                 <select name="who_select" id="who_select">
                     <option>--Who--</option>
                     <option>Miss Scarlet</option>
@@ -84,6 +87,8 @@
                 <button id='make_accusation_button'>Make an Accusation</button>
             </div>
             <p>Player movement:
+                <input type="text" name="game_id_string" id="game_id_move" placeholder="Game ID">
+                <input type="text" name="player_id_string" id="player_id_move" placeholder="Player ID">
                 <select name="move_player_select" id="move_player_select">
                     <option>--none selected--</option>
                     <option>Up</option>

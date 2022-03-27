@@ -55,6 +55,7 @@ const createGame = () =>{
     $.ajax(
         {
             url: '/v1/games', 
+            type: 'POST',
             success: function(response) { 
                 console.log(response);
             },
@@ -69,7 +70,8 @@ const createGame = () =>{
 const createPlayer = () => {
     $.ajax(
         {
-            url: `/v1/games/${document.getElementById('game_id_string').value}/players/${document.getElementById('player_id_string').value}`, 
+            url: `/v1/games/${document.getElementById('game_id_string_create_player').value}/players`, 
+            type: 'POST',
             success: function(response) { 
                 console.log(response);
             },
@@ -84,7 +86,7 @@ const createPlayer = () => {
 const getPlayerInfo = () => {
     $.ajax(
         {
-            url: `/v1/games/${document.getElementById('game_id_string').value}/players`, 
+            url: `/v1/games/${document.getElementById('game_id_string_get_player').value}/players/${document.getElementById('player_id_string_get_player').value}`, 
             success: function(response) { 
                 console.log(response);
             },
@@ -99,7 +101,7 @@ const getPlayerInfo = () => {
 const makeAccusation = (payload) => {
     $.ajax(
         {
-            url: `/v1/games/${document.getElementById('game_id_string').value}/players/${document.getElementById('player_id_string').value}/accusation`, 
+            url: `/v1/games/${document.getElementById('game_id_accSug').value}/players/${document.getElementById('player_id_accSug').value}/accusation`, 
             data: payload, 
             type: 'POST',
             success: function(response) { 
@@ -116,7 +118,7 @@ const makeAccusation = (payload) => {
 const makeSuggestion = (payload) => {
     $.ajax(
         {
-            url: `/v1/games/${document.getElementById('game_id_string').value}/players/${document.getElementById('player_id_string').value}/suggestion`, 
+            url: `/v1/games/${document.getElementById('game_id_accSug').value}/players/${document.getElementById('player_id_accSug').value}/suggestion`, 
             data: payload, 
             type: 'POST',
             success: function(response) { 
@@ -133,7 +135,7 @@ const makeSuggestion = (payload) => {
 const movePlayer = (payload) => {
     $.ajax(
         {
-            url: `/v1/games/${document.getElementById('game_id_string').value}/players/${document.getElementById('player_id_string').value}/move`, 
+            url: `/v1/games/${document.getElementById('game_id_move').value}/players/${document.getElementById('player_id_move').value}/move`, 
             data: payload, 
             type: 'POST',
             success: function(response) { 
