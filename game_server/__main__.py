@@ -22,7 +22,6 @@ def hello():
 def main():
     global app
     global mongo
-    app = connexion.App(__name__, specification_dir='./openapi/')
     setup_db(app.app)
     print('Server: init main()')
     app.app.json_encoder = encoder.JSONEncoder
