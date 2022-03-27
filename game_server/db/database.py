@@ -66,8 +66,9 @@ def get_players(game_board_id):
                                             {"players": 1, "_id": 0})["players"])
 
 def get_player(game_board_id, player_id):
-    return get_games_collection().find_one({"game_board_id": game_board_id}, 
-                                       {"players": {"$elemMatch" : {"player_id": player_id}}}).pop("_id")
+    player = get_games_collection().find_one({"game_board_id": game_board_id}, 
+                                       {"players": {"$elemMatch" : {"player_id": player_id}}})["players"][0]
+    return player
 
 def __test_mongo():
     global MONGO_DB
