@@ -101,6 +101,7 @@ const makeAccusation = (payload) => {
         {
             url: `/v1/games/${document.getElementById('game_id_string').value}/players/${document.getElementById('player_id_string').value}/accusation`, 
             data: payload, 
+            type: 'POST',
             success: function(response) { 
                 console.log(response);
             },
@@ -117,6 +118,7 @@ const makeSuggestion = (payload) => {
         {
             url: `/v1/games/${document.getElementById('game_id_string').value}/players/${document.getElementById('player_id_string').value}/suggestion`, 
             data: payload, 
+            type: 'POST',
             success: function(response) { 
                 console.log(response);
             },
@@ -133,6 +135,7 @@ const movePlayer = (payload) => {
         {
             url: `/v1/games/${document.getElementById('game_id_string').value}/players/${document.getElementById('player_id_string').value}/move`, 
             data: payload, 
+            type: 'POST',
             success: function(response) { 
                 console.log(response);
             },
