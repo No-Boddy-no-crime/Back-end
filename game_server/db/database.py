@@ -8,6 +8,9 @@ def setup_db(flask_app):
     flask_app.config["MONGO_URI"] = "mongodb://localhost:27017/clueDB"
     MONGO = PyMongo(flask_app)
 
+def get_db():
+    return MONGO
+
 def get_games_collection():
     assert MONGO is not None
     return MONGO.db.get_collection("Games")

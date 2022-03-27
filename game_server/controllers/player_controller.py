@@ -5,7 +5,7 @@ from game_server.models.error import Error  # noqa: E501
 from game_server.models.player import Player  # noqa: E501
 from game_server.models.rebuttal_card import RebuttalCard  # noqa: E501
 from game_server import util
-
+from game_server.db.database import get_db
 
 def create_player(game_id):  # noqa: E501
     """Join a game as a player
