@@ -17,7 +17,7 @@ def create_player(game_id):  # noqa: E501
 
     :rtype: Player
     """
-    return db.create_player(game_id=game_id)
+    return db.create_player(game_board_id=game_id)
 
 
 def make_accusation(game_id, player_id):  # noqa: E501
