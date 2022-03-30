@@ -2,6 +2,7 @@ import random
 from flask import Flask, json
 from flask_pymongo import PyMongo
 import pymongo
+from bson import json_util
 
 MONGO_DB = None
 characters = set(["Miss Scarlet",
@@ -33,10 +34,8 @@ def create_game(init = False):
             "players": []}
     get_games_collection().insert_one(game)
 
-    if init:
-        return game
-    else:
-        return "Game Created with game id: " + str(game_id)
+    return json.loads(json_util.dumps(game.pop("_id")))
+
 
 def get_games(limit = None):
     if limit:
