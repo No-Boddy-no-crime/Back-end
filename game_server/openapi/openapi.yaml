@@ -75,7 +75,7 @@ paths:
         name: gameId
         required: true
         schema:
-          type: number
+          type: string
         style: simple
       responses:
         "200":
@@ -96,7 +96,33 @@ paths:
       tags:
       - games
       x-openapi-router-controller: game_server.controllers.games_controller
-  /games/{gameId}/players:
+    post:
+      operationId: end_game
+      parameters:
+      - description: The id of the game to retrieve
+        explode: false
+        in: path
+        name: gameId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not found
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: unexpected error
+      summary: Delete a specific Game
+      tags:
+      - games
+      x-openapi-router-controller: game_server.controllers.games_controller
+  /games/{gameId}/player:
     post:
       operationId: create_player
       parameters:
@@ -106,7 +132,7 @@ paths:
         name: gameId
         required: true
         schema:
-          type: number
+          type: string
         style: simple
       responses:
         "200":
@@ -125,7 +151,7 @@ paths:
       tags:
       - player
       x-openapi-router-controller: game_server.controllers.player_controller
-  /games/{gameId}/players/{playerId}:
+  /games/{gameId}/player/{playerId}:
     get:
       operationId: show_player_by_id
       parameters:
@@ -135,7 +161,7 @@ paths:
         name: gameId
         required: true
         schema:
-          type: number
+          type: string
         style: simple
       - description: The id of the player to retrieve
         explode: false
@@ -143,7 +169,7 @@ paths:
         name: playerId
         required: true
         schema:
-          type: number
+          type: string
         style: simple
       responses:
         "200":
@@ -166,7 +192,7 @@ paths:
       tags:
       - player
       x-openapi-router-controller: game_server.controllers.player_controller
-  /games/{gameId}/players/{playerId}/accusation:
+  /games/{gameId}/player/{playerId}/accusation:
     post:
       operationId: make_accusation
       parameters:
@@ -176,7 +202,7 @@ paths:
         name: gameId
         required: true
         schema:
-          type: number
+          type: string
         style: simple
       - description: The id of the player to retrieve
         explode: false
@@ -184,7 +210,7 @@ paths:
         name: playerId
         required: true
         schema:
-          type: number
+          type: string
         style: simple
       responses:
         "201":
@@ -207,7 +233,7 @@ paths:
       tags:
       - player
       x-openapi-router-controller: game_server.controllers.player_controller
-  /games/{gameId}/players/{playerId}/move:
+  /games/{gameId}/player/{playerId}/move:
     post:
       operationId: move_player
       parameters:
@@ -217,7 +243,7 @@ paths:
         name: gameId
         required: true
         schema:
-          type: number
+          type: string
         style: simple
       - description: The id of the player to retrieve
         explode: false
@@ -225,7 +251,7 @@ paths:
         name: playerId
         required: true
         schema:
-          type: number
+          type: string
         style: simple
       responses:
         "201":
@@ -248,7 +274,7 @@ paths:
       tags:
       - player
       x-openapi-router-controller: game_server.controllers.player_controller
-  /games/{gameId}/players/{playerId}/suggestion:
+  /games/{gameId}/player/{playerId}/suggestion:
     post:
       operationId: make_suggestion
       parameters:
@@ -258,7 +284,7 @@ paths:
         name: gameId
         required: true
         schema:
-          type: number
+          type: string
         style: simple
       - description: The id of the player to retrieve
         explode: false
@@ -266,7 +292,7 @@ paths:
         name: playerId
         required: true
         schema:
-          type: number
+          type: string
         style: simple
       responses:
         "201":
@@ -294,6 +320,9 @@ components:
     Player:
       description: An object which stores a player's unique ID, and which character
         they currently are
+      example:
+        player_id: player_id
+        character_name: character_name
       properties:
         player_id:
           format: int64
@@ -336,26 +365,25 @@ components:
           type: string
       type: object
     Game:
+      example:
+        name: name
+        id: 0
+        tag: tag
+        status: status
       properties:
-        game_board_id:
+        id:
           format: int64
           title: id
           type: integer
         name:
           title: name
           type: string
-        board:
-          title: board
-          type: array
-          items:
-            $ref: '#/components/schemas/CardSet'
+        tag:
+          title: tag
+          type: string
         status:
           title: status
           type: string
-        players:
-          type: array
-          items:
-            $ref: '#/components/schemas/Player'
       required:
       - id
       - name
