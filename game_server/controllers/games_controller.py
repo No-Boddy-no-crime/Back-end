@@ -6,6 +6,8 @@ from game_server.models.error import Error  # noqa: E501
 from game_server.models.game import Game  # noqa: E501
 from game_server import util
 import game_server.db.database as db
+import game_server.controllers.card_controller as cards
+import turn_server.turn_server
 from flask import abort
 
 
@@ -73,3 +75,24 @@ def end_game(game_id):  # noqa: E501
     except ValueError as e:
         abort(404, str(e))
     return True
+
+def start_game(game_id):  # noqa: E501
+    """Start a specific game
+
+     # noqa: E501
+
+    :param game_id: The id of the game to retrieve
+    :type game_id: str
+
+    :rtype: Game
+    """
+    # Pick guilty cards
+    casefile = cards.pick_casefile(game_id)
+    # Deal the remaining cards
+    players, visible_cards = cards.deal_remain_cards(game_id, casefile)
+    # Change the game status
+    new_game = db.update_game(game_board_id=game_id, new_game_state={"status": "in-play"})
+    # Notify the players of the changed state
+    # TODO: this might not be right
+    turn_server.gameState(new_game)
+    return new_game
