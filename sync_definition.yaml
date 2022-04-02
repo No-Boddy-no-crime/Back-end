@@ -88,7 +88,57 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-
+    delete:
+      summary: end a game
+      operationId: endGame
+      tags:
+        - games
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          description: The id of the game to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not found
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      summary: Start a specific game
+      operationId: startGame
+      tags:
+        - games
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          description: The id of the game to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Game"
+        '404':
+          description: Not found
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  
   /games/{gameId}/player:
     post:
       summary: Join a game as a player
