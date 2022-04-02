@@ -1,3 +1,4 @@
+from multiprocessing.sharedctypes import Value
 import connexion
 import six
 
@@ -5,6 +6,7 @@ from game_server.models.error import Error  # noqa: E501
 from game_server.models.game import Game  # noqa: E501
 from game_server import util
 import game_server.db.database as db
+from flask import abort
 
 
 def create_game():  # noqa: E501
@@ -15,7 +17,11 @@ def create_game():  # noqa: E501
 
     :rtype: Game
     """
-    return db.create_game()
+    try:
+        game = db.create_game()
+    except ValueError as e:
+        abort(503, str(e))
+    return jsonify(game)
 
 
 def list_games(limit=None):  # noqa: E501
@@ -28,8 +34,12 @@ def list_games(limit=None):  # noqa: E501
 
     :rtype: List[Game]
     """
-    print(db.get_games(limit=limit))
-    return db.get_games(limit=limit)
+    try:
+        games = db.get_games(limit=limit)
+        print(games)
+    except ValueError as e:
+        abort(404, str(e))
+    return games
 
 def show_game_by_id(game_id):  # noqa: E501
     """Info for a specific game
@@ -41,5 +51,25 @@ def show_game_by_id(game_id):  # noqa: E501
 
     :rtype: Game
     """
-    print(db.get_game(game_board_id=game_id))
-    return db.get_game(game_board_id=game_id)
+    try:
+        game = db.get_game(game_board_id=game_id)
+        print(game)
+    except ValueError as e:
+        abort(404, str(e))
+    return game
+
+def end_game(game_id):  # noqa: E501
+    """Delete a specific Game
+
+     # noqa: E501
+
+    :param game_id: The id of the game to retrieve
+    :type game_id: str
+
+    :rtype: None
+    """
+    try:
+        db.delete_game(game_id)
+    except ValueError as e:
+        abort(404, str(e))
+    return True

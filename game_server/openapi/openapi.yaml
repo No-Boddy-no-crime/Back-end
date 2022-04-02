@@ -96,7 +96,7 @@ paths:
       tags:
       - games
       x-openapi-router-controller: game_server.controllers.games_controller
-    post:
+    delete:
       operationId: end_game
       parameters:
       - description: The id of the game to retrieve
