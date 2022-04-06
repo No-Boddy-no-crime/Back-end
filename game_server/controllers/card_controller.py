@@ -51,6 +51,3 @@ def deal_remaining_cards(game_board_id, casefile):
     assert len(remaining_cards) == visible_cards
     db.update_game(game_board_id=game_board_id, new_game_state={"players": players, "visible_cards": visible_cards})
     return players, remaining_cards
-
-def get_unassigned_cards(game_board_id):
-    pass

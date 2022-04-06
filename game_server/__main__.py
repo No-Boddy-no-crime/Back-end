@@ -5,6 +5,7 @@ import connexion
 from game_server import encoder
 from game_server.db.database import setup_db
 from flask import g, json, render_template
+from flask import jsonify, abort
 from flask_pymongo import PyMongo
 from turn_server.turn_server import create_socketio, socketio
 
@@ -13,6 +14,11 @@ app = connexion.App(__name__, specification_dir='./openapi/')
 app.app.static_url_path = "../web/static"
 app.app.static_folder = '../web/static'
 app.app.template_folder = '../web/templates'
+
+
+@app.errorhandler(503)
+def server_cannot_handle_request(e):
+    return jsonify(error=str(e)), 503
 
 @app.route('/')
 def hello():

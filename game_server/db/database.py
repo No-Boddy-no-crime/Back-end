@@ -1,7 +1,9 @@
+from multiprocessing.sharedctypes import Value
 import random
 from flask import Flask, json
 from flask_pymongo import PyMongo
 import pymongo
+from pymongo import ReturnDocument
 from bson import json_util
 
 MONGO_DB = None
@@ -11,6 +13,7 @@ characters = set(["Miss Scarlet",
                     "Professor Plum",
                     "Mr Green",
                     "Colonel Mustard"])
+CURRENT_GAMES = set()
 
 def setup_db(flask_app):
     global MONGO_DB
@@ -26,35 +29,67 @@ def get_games_collection():
 
 
 def create_game(init = False):
+    if len(CURRENT_GAMES):
+        raise ValueError("Too many games")
     game_id = random.randint(0, 500)
+    while game_id in CURRENT_GAMES:
+        game_id = random.randint(0, 500)
+    CURRENT_GAMES.add(game_id)
     game = {"game_board_id": game_id, 
-            "name": "This is our game name",
             "board": [],
             "status": "new",
             "players": []}
     get_games_collection().insert_one(game)
-
-    return json.loads(json_util.dumps(game.pop("_id")))
+    return game.pop("_id")
 
 
 def get_games(limit = None):
     if limit:
-        return list(get_games_collection().find({},{'_id': False}).limit(limit))
-    return list(get_games_collection().find({}, {'_id': False}))
+        games = list(get_games_collection().find({},{'_id': False}).limit(limit))
+    else:
+        games = list(get_games_collection().find({}, {'_id': False}))
+    if len(games) == 0:
+        raise ValueError("No existing games")
+    return games
 
 def get_game(game_board_id = None):
     if game_board_id:
-        return get_games_collection().find_one({"game_board_id": game_board_id}, {'_id': False})
-    return get_games_collection().find_one()
+        game = get_games_collection().find_one({"game_board_id": game_board_id}, {'_id': False})
+    else:
+        game = get_games_collection().find_one()
+    if game is None:
+        raise ValueError('Game not found')
+    return game
 
+def delete_game(game_board_id):
+    deleted = get_games_collection().delete_one({"game_board_id": game_board_id})
+    if deleted.deleted_count == 0:
+        raise ValueError("No game found")
+    
+def update_game(game_board_id, new_game_state):
+    new_game = get_games_collection().find_one_and_update({"game_board_id": game_board_id}, 
+                                                            {'$set': new_game_state},
+                                                            projection={'_id': False}, 
+                                                            return_document=ReturnDocument.AFTER)
+    if new_game is None:
+        raise ValueError("No game found")
+    return new_game
 
 def create_player(game_board_id):
     # TODO: race condition here
+    game = get_games_collection().find_one({"game_board_id": game_board_id}, {"_id": 0})
+    
+    if game is None:
+        raise ValueError("No game found")
+    if game["status"] == "in-play":
+        raise IndexError("Game will not accept new players")
+    
     try:
-        taken_characters = set([player["character_name"] for player in get_games_collection().find_one({"game_board_id": game_board_id}, {"players": 1, "_id": 0})["players"]])
+        taken_characters = set([player["character_name"] for player in game["players"]])
         available_characters = characters.difference(taken_characters)
     except KeyError:
         available_characters = characters
+    
     # TODO: player ID should be real
     player_id = random.randint(0, 7)
     player = {
