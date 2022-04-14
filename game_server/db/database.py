@@ -89,9 +89,8 @@ def create_player(game_board_id):
         available_characters = characters.difference(taken_characters)
     except KeyError:
         available_characters = characters
-    
-    # TODO: player ID should be real
-    player_id = random.randint(0, 7)
+
+    player_id = len(game["players"])
     player = {
         "player_id": player_id,
         "character_name": list(available_characters)[0]
