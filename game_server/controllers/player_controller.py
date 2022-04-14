@@ -6,6 +6,7 @@ from game_server.models.card_set import CardSet  # noqa: E501
 from game_server.models.error import Error  # noqa: E501
 from game_server.models.player import Player  # noqa: E501
 from game_server.models.rebuttal_card import RebuttalCard  # noqa: E501
+from game_server.models.move import Move
 from game_server import util
 from game_server.controllers.card_controller import CULPRIT, ROOM
 import game_server.controllers.board_controller as board_controller
@@ -107,7 +108,7 @@ def suggestion_move_player(game, card_set):
     board_controller.update_game_board_with_move(game, moved_player_id, moved_to_room)
 
 
-def move_player(game_id, player_id, body, force=False):  # noqa: E501
+def move_player(game_id, player_id, move):  # noqa: E501
     """Create a new player move
 
      # noqa: E501
@@ -116,14 +117,15 @@ def move_player(game_id, player_id, body, force=False):  # noqa: E501
     :type game_id: str
     :param player_id: The id of the player to retrieve
     :type player_id: str
-    :param body: The move
-    :type body: int
+    :param move: The move
+    :type move: dict | bytes
 
     :rtype: Player
     """
-    
+    if connexion.request.is_json:
+        move = Move.from_dict(connexion.request.get_json())  # noqa: E501
     #TODO: all the room checks
-    board_controller.check_move(from_room, to_room)
+    board_controller.check_move(move., to_room)
     board_controller.update_game_board_with_move(player_id)
     return 'do some magic!'
 
