@@ -32,6 +32,9 @@ def make_accusation(game_id, player_id):  # noqa: E501
 
     :rtype: Player
     """
+    game = db.get_game(game_board_id=game_id)
+    for player in game["players"]:
+        
     return 'an accusation!'
 
 
