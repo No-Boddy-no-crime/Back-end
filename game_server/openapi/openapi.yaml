@@ -66,6 +66,32 @@ paths:
       - games
       x-openapi-router-controller: game_server.controllers.games_controller
   /games/{gameId}:
+    delete:
+      operationId: end_game
+      parameters:
+      - description: The id of the game to retrieve
+        explode: false
+        in: path
+        name: gameId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not found
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: unexpected error
+      summary: end a game
+      tags:
+      - games
+      x-openapi-router-controller: game_server.controllers.games_controller
     get:
       operationId: show_game_by_id
       parameters:
@@ -96,8 +122,8 @@ paths:
       tags:
       - games
       x-openapi-router-controller: game_server.controllers.games_controller
-    delete:
-      operationId: end_game
+    post:
+      operationId: start_game
       parameters:
       - description: The id of the game to retrieve
         explode: false
@@ -109,7 +135,11 @@ paths:
         style: simple
       responses:
         "200":
-          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+          description: Expected response to a valid request
         "404":
           description: Not found
         default:
@@ -118,7 +148,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
           description: unexpected error
-      summary: Delete a specific Game
+      summary: Start a specific game
       tags:
       - games
       x-openapi-router-controller: game_server.controllers.games_controller
@@ -212,6 +242,13 @@ paths:
         schema:
           type: string
         style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardSet'
+        description: The accusation card set
+        required: true
       responses:
         "201":
           content:
@@ -253,6 +290,13 @@ paths:
         schema:
           type: string
         style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Move'
+        description: The move
+        required: true
       responses:
         "201":
           content:
@@ -294,6 +338,13 @@ paths:
         schema:
           type: string
         style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardSet'
+        description: The suggestion card set
+        required: true
       responses:
         "201":
           content:
@@ -354,15 +405,26 @@ components:
       type: object
     CardSet:
       description: A set of cards representing a possible crime
+      example:
+        weapon: weapon
+        character_name: character_name
+        room: room
+        player:
+          player_id: player_id
+          character_name: character_name
       properties:
         player:
           $ref: '#/components/schemas/Player'
         room:
+          title: room
           type: string
         weapon:
+          title: weapon
           type: string
         character_name:
+          title: character_name
           type: string
+      title: CardSet
       type: object
     Game:
       example:
@@ -393,6 +455,9 @@ components:
       items:
         $ref: '#/components/schemas/Game'
       type: array
+    Move:
+      format: int32
+      type: integer
     Error:
       properties:
         code:

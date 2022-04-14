@@ -1,11 +1,12 @@
 import connexion
 import six
 
+from game_server.models.card_set import CardSet  # noqa: E501
 from game_server.models.error import Error  # noqa: E501
 from game_server.models.player import Player  # noqa: E501
 from game_server.models.rebuttal_card import RebuttalCard  # noqa: E501
 from game_server import util
-import game_server.db.database as db
+
 
 def create_player(game_id):  # noqa: E501
     """Join a game as a player
@@ -17,10 +18,10 @@ def create_player(game_id):  # noqa: E501
 
     :rtype: Player
     """
-    return db.create_player(game_board_id=game_id)
+    return 'do some magic!'
 
 
-def make_accusation(game_id, player_id):  # noqa: E501
+def make_accusation(game_id, player_id, card_set):  # noqa: E501
     """Create a new player accusation
 
      # noqa: E501
@@ -29,16 +30,17 @@ def make_accusation(game_id, player_id):  # noqa: E501
     :type game_id: str
     :param player_id: The id of the player to retrieve
     :type player_id: str
+    :param card_set: The accusation card set
+    :type card_set: dict | bytes
 
     :rtype: Player
     """
-    game = db.get_game(game_board_id=game_id)
-    for player in game["players"]:
-        
-    return 'an accusation!'
+    if connexion.request.is_json:
+        card_set = CardSet.from_dict(connexion.request.get_json())  # noqa: E501
+    return 'do some magic!'
 
 
-def make_suggestion(game_id, player_id):  # noqa: E501
+def make_suggestion(game_id, player_id, card_set):  # noqa: E501
     """Create a new player suggestion
 
      # noqa: E501
@@ -47,13 +49,17 @@ def make_suggestion(game_id, player_id):  # noqa: E501
     :type game_id: str
     :param player_id: The id of the player to retrieve
     :type player_id: str
+    :param card_set: The suggestion card set
+    :type card_set: dict | bytes
 
     :rtype: RebuttalCard
     """
-    return 'a suggestion!'
+    if connexion.request.is_json:
+        card_set = CardSet.from_dict(connexion.request.get_json())  # noqa: E501
+    return 'do some magic!'
 
 
-def move_player(game_id, player_id):  # noqa: E501
+def move_player(game_id, player_id, body):  # noqa: E501
     """Create a new player move
 
      # noqa: E501
@@ -62,10 +68,12 @@ def move_player(game_id, player_id):  # noqa: E501
     :type game_id: str
     :param player_id: The id of the player to retrieve
     :type player_id: str
+    :param body: The move
+    :type body: int
 
     :rtype: Player
     """
-    return 'a move!'
+    return 'do some magic!'
 
 
 def show_player_by_id(game_id, player_id):  # noqa: E501
@@ -80,4 +88,4 @@ def show_player_by_id(game_id, player_id):  # noqa: E501
 
     :rtype: Player
     """
-    return db.get_player(game_board_id=game_id, player_id=player_id)
+    return 'do some magic!'
