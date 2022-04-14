@@ -65,4 +65,5 @@ def update_game_board_with_move(game, moved_player_id, moved_to_room):
     board[moved_to_room].append(moved_player)
     game["board"] = board
     db.update_game(game["game_board_id"], game)
+    # TODO: not a real function yet
     turn_server.notify_update_game_state(game)
