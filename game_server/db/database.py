@@ -36,7 +36,7 @@ def create_game(init = False):
         game_id = random.randint(0, 500)
     CURRENT_GAMES.add(game_id)
     game = {"game_board_id": game_id, 
-            "board": [],
+            "board": [[] for _ in range(20)],
             "status": "new",
             "players": []}
     get_games_collection().insert_one(game)
@@ -75,6 +75,11 @@ def update_game(game_board_id, new_game_state):
         raise ValueError("No game found")
     return new_game
 
+def update_player(game_board_id, player_id, update):
+    # {userID:1, "solutions.textID":2}, {$set: {"solutions.$.solution": "the new text"}}
+    get_games_collection().find_one_and_update({"game_id": game_board_id, "players.player_id": player_id}, {"$set": update})
+
+
 def create_player(game_board_id):
     # TODO: race condition here
     game = get_games_collection().find_one({"game_board_id": game_board_id}, {"_id": 0})
@@ -93,7 +98,8 @@ def create_player(game_board_id):
     player_id = len(game["players"])
     player = {
         "player_id": player_id,
-        "character_name": list(available_characters)[0]
+        "character_name": list(available_characters)[0],
+        "cards": None
     }
     get_games_collection().find_one_and_update({"game_board_id": game_board_id}, {"$push" : {"players": player}})
     return player

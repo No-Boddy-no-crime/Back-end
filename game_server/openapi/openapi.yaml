@@ -456,8 +456,17 @@ components:
         $ref: '#/components/schemas/Game'
       type: array
     Move:
-      format: int32
-      type: integer
+      example:
+        to_room: 6
+        from_room: 0
+      properties:
+        from_room:
+          title: from_room
+          type: integer
+        to_room:
+          title: to_room
+          type: integer
+      title: Move
     Error:
       properties:
         code:

@@ -457,9 +457,9 @@ components:
       type: array
     Move:
       properties:
-        from: 
+        from_room: 
           type: integer
-        to:
+        to_room:
           type: integer
     Error:
       properties:

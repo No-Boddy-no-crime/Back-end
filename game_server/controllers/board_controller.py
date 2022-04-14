@@ -1,6 +1,5 @@
-
-
-default_board = [[] for _ in range(20)]
+import turn_server
+import game_server.db.database as db
 
 room_mapping = {"study" : 0, 
         "study_to_hall": 1,
@@ -47,7 +46,9 @@ valid_transitions = [[1, 5, 20],
                         [19, 15, 0]]
 
 def check_move(from_room, to_room):
-    pass
+    if to_room in valid_transitions[from_room]:
+        return True
+    return False
 
 def update_game_board_with_move(game, moved_player_id, moved_to_room):
     board = game["board"]
@@ -61,5 +62,7 @@ def update_game_board_with_move(game, moved_player_id, moved_to_room):
                 room.remove(player)
     
     # place the player in the new room
-    room_id = ROOM.index(moved_to_room)
-    board[room_id].append(moved_player)
+    board[moved_to_room].append(moved_player)
+    game["board"] = board
+    db.update_game(game["game_board_id"], game)
+    turn_server.notify_update_game_state(game)
