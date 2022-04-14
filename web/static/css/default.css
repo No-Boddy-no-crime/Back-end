@@ -1,14 +1,53 @@
+.page-container {
+    width: 90%;
+	margin-left: 5%;
+	margin-right: 5%;
+}
+
+.header-image {
+    width: 80px;
+    align-self: center;
+    object-fit: cover;
+    transition: 0.3s;
+    padding-top: 0px;
+}
+
+.page-title {
+    text-align: center;
+    vertical-align: middle;
+    font-size: 60px;
+    color: maroon;
+}
+
+.button-style {
+    font-size: 30px;
+	text-align: center;
+	margin: 20px;
+    width: 30%;
+    color: maroon;
+}
+
+.button-style:hover {
+    cursor: pointer;
+	background-color: maroon;
+	color: white;
+}
+
+.small-button-style {
+    font-size: 20px;
+    width: 10%;
+    color: maroon;
+}
+
+.small-button-style:hover {
+    cursor: pointer;
+	background-color: maroon;
+	color: white;
+}
+
 .messageDivs {
 	overflow-y: auto;
 	min-height: 100px;
 	max-height: 200px;
 	border: solid 2px;
-}
-
-.boundingBox{
-	padding:10px; 
-	border:3px; 
-	border-style:solid; 
-	border-color:#000000; 
-	margin:10px;
 }

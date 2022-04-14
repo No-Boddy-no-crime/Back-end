@@ -35,14 +35,23 @@
         </tr>
         <tr>
             <td colspan="3" style="text-align: center;">
-                <a href="find-a-game.html">
+                <input 
+                    type="text" 
+                    id="game_id_string" placeholder="Inpute Game ID"
+                >   
+                <a href="joined-game.html">
                     <button
-                        id="find_game_button"
-                        class="button-style"
+                        id="join_game_by_id_button"
+                        class="small-button-style"
                     >
-                        Find a Game
+                        Join!
                     </button>
                 </a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3" style="text-align: center;">
+                <h2 style="color: maroon;">-- OR --</h2>
             </td>
         </tr>
         <tr>
@@ -52,19 +61,7 @@
                         id="view_available_games_button"
                         class="button-style"
                     >
-                        Join a Game
-                    </button>
-                </a>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="3" style="text-align: center;">
-                <a href="joined-game.html">
-                    <button
-                        id="create_game_button"
-                        class="button-style"
-                    >
-                        Create a New Game
+                        View Available Games
                     </button>
                 </a>
             </td>
