@@ -1,4 +1,4 @@
-from nis import match
+#from nis import match
 import connexion
 import six
 
@@ -125,7 +125,7 @@ def move_player(game_id, player_id, move):  # noqa: E501
     if connexion.request.is_json:
         move = Move.from_dict(connexion.request.get_json())  # noqa: E501
     #TODO: all the room checks
-    board_controller.check_move(move., to_room)
+    board_controller.check_move(move.from_room, to_room)
     board_controller.update_game_board_with_move(player_id)
     return 'do some magic!'
 

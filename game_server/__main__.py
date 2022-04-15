@@ -15,11 +15,11 @@ app.app.static_url_path = "../web/static"
 app.app.static_folder = '../web/static'
 app.app.template_folder = '../web/templates'
 
-
+'''
 @app.errorhandler(503)
 def server_cannot_handle_request(e):
     return jsonify(error=str(e)), 503
-
+'''
 @app.route('/')
 def hello():
     print('Server: serving index.html')
