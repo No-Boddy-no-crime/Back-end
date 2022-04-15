@@ -95,4 +95,5 @@ def start_game(game_id):  # noqa: E501
     # Notify the players of the changed state
     # TODO: this might not be right
     turn_server.gameState(new_game)
+    turn_server.gameTurn({'game_board_id':game_id})
     return new_game

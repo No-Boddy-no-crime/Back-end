@@ -46,7 +46,7 @@ def make_accusation(game_id, player_id, card_set):  # noqa: E501
     game = db.get_game(game_id)
     case_file = set(game["casefile"])
     if case_file == set(card_set):
-        turn_server.notify_players_of_winner(player_id)
+        turn_server.notify_players_of_winner(game_id, player_id)
         return True
     # this is a positional update
     db.update_player(game_id, player_id, {"players.$.status": "post-accusation"})
@@ -83,16 +83,16 @@ def make_suggestion(game_id, player_id, card_set):  # noqa: E501
         if len(matching_cards) == 0:
             continue
         elif len(matching_cards) == 1:
-            turn_server.notify_players_of_rebutall(other_player["player_id"])
+            turn_server.notify_players_of_rebutall(game_id, other_player["player_id"])
             rebuttal = {"player_id": other_player["player_id"], "rebuttal_card": matching_cards.pop()}
             return rebuttal
         else:
             #TODO this needs the real turn server implementation
-            rebuttal = turn_server.notify_player_to_rebute(other_player["player_id"], list(matching_cards))
+            rebuttal = turn_server.notify_player_to_rebute(game_id, other_player["player_id"], list(matching_cards))
             return rebuttal
     
     # if we are here, there was no rebute
-    turn_server.notify_players_no_rebute(card_set)
+    turn_server.notify_players_no_rebute(game_id, card_set)
     return {}
 
 def suggestion_move_player(game, card_set):
