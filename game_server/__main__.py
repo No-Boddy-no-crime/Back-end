@@ -25,11 +25,6 @@ def home():
     print('Server: serving index.html')
     return render_template('index.html', async_mode=socketio.async_mode)
 
-@app.route('/joinGame', methods=('GET', 'POST'))
-def joinGame():
-    print('Server: serving joinGame.html')
-    return render_template('joinGame.html', async_mode=socketio.async_mode)
-
 @app.route('/findGame', methods=('GET', 'POST'))
 def findGame():
     print('Server: serving findGame.html')
