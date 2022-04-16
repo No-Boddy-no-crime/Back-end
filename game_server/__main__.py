@@ -25,20 +25,20 @@ def home():
     print('Server: serving index.html')
     return render_template('index.html', async_mode=socketio.async_mode)
 
-@app.route('/findGame', methods=('GET', 'POST'))
-def findGame():
-    print('Server: serving find-a-game.html')
-    return render_template('find-a-game.html', async_mode=socketio.async_mode)
-
 @app.route('/joinGame', methods=('GET', 'POST'))
 def joinGame():
-    print('Server: serving join-a-game.html')
-    return render_template('join-a-game.html', async_mode=socketio.async_mode)
+    print('Server: serving joinGame.html')
+    return render_template('joinGame.html', async_mode=socketio.async_mode)
+
+@app.route('/findGame', methods=('GET', 'POST'))
+def findGame():
+    print('Server: serving findGame.html')
+    return render_template('findGame.html', async_mode=socketio.async_mode)
 
 @app.route('/createGame', methods=('GET', 'POST'))
 def createGame():
-    print('Server: serving joined-game.html')
-    return render_template('joined-game.html', async_mode=socketio.async_mode)
+    print('Server: serving createGame.html')
+    return render_template('createGame.html', async_mode=socketio.async_mode)
 
 def main():
     global app
