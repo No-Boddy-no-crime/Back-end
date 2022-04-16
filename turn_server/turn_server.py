@@ -51,7 +51,7 @@ def gameTurn(message):
     if isinstance(message, dict):
         room_id = message['game_board_id']
     else:
-        room_id = message
+        room_id = int(message.pop())
     try: # Check to see if the game has already initiated a turn.
         turn[room_id] +=1
     except:
@@ -64,14 +64,24 @@ def gameTurn(message):
     # retrieve the session id of the active player.
     active_player = db.get_games_collection().find_one({"game_board_id": room_id}, 
                                        {"players": {"$elemMatch" : {"character_name": sorted_players[idx]}}})["players"][0]
-    
 
-    id = active_player['sid']
-    board = db.get_game(room_id)['board']
-    # Assumes we are updating the db with current position as player attribute.
-    current_position = active_player['room']
-    options = check_possible_moves(board, current_position)
-    emit('gameTurn', {'moves':options}, to=id)
+    try:
+        id = active_player['sid']
+        board = db.get_game(room_id)['board']
+        # Assumes we are updating the db with current position as player attribute.
+        
+        for room in board:
+            for player in room:
+                if player == active_player:
+                    current_position = room
+        #TODO Get player current position. validate move options.
+        options = check_possible_moves(board, current_position)
+  
+        emit('gameTurn', {'moves':options}, to=id)
+    except:
+        print(f"Unable to query session id of active player")
+    
+    
 
 
 @socketio.event
@@ -79,16 +89,20 @@ def gameState(message):
     """ Handles request for game state. Functions as event handler for client request for game state or function to broadcast updated game state called by game_server."""
     if isinstance(message, dict):
         try: #request came from client.
-            id = request.sid
+            request.sid
             room_id = message['game_board_id']
             game_state = json.loads(json_util.dumps(db.get_game(game_board_id=room_id)))
             
         except: #request came from game_server
             game_state = message
+            room_id = game_state['game_board_id']
     else:
         room_id = message  
         game_state = json.loads(json_util.dumps(db.get_game(game_board_id=room_id)))
-    emit('GameState', game_state, to=room_id)
+    try:
+        emit('GameState', game_state, to=room_id)
+    except:
+        print(f"Attempted to emit game state. No room_id: {room_id}")
     
 
 
@@ -96,7 +110,10 @@ def notify_players_of_winner(game_id, player_id):
     character = db.get_games_collection().find_one({"game_board_id": game_id}, 
                                        {"players": {"$elemMatch" : {"player_id": player_id}}})["players"][0]['character_name']
     msg = f"{character} has won the game!!!"
-    socketio.emit('gameOver', msg, to=game_id)
+    try:
+        socketio.emit('gameOver', msg, to=game_id)
+    except:
+        print(f"Attempted to notify players of game over. No room_id: {game_id}")
 
 
 
@@ -104,7 +121,10 @@ def notify_players_of_rebutall(game_id, other_player_id):
     character = db.get_games_collection().find_one({"game_board_id": game_id}, 
                                        {"players": {"$elemMatch" : {"player_id": other_player_id}}})["players"][0]['character_name']
     msg = f"{character} has made a rebuttal."
-    socketio.emit('rebuttal', msg, to=game_id)
+    try:
+        socketio.emit('rebuttal', msg, to=game_id)
+    except:
+        print(f"Attempted to notify all players of rebuttal. No room_id: {game_id}")
 
     
 
@@ -122,11 +142,18 @@ def notify_player_to_rebute(game_id, other_player_id, matching_cards):
         rebuttal = matching_cards[0]
     return rebuttal
 
+def notify_players_no_rebute(game_id, card_set):
+    msg = {"msg": "No Player was able to rebute the suggestion", "card_set":card_set}
+    try:
+        emit("noRebuttal", msg, to=game_id)
+    except:
+        print(f"Attempted to broadcase no rebute. No room_id: {game_id}")
+
 
 def check_possible_moves(board, position):
     potential_moves = bc.valid_transitions[bc.room_mapping[position]]
     for room in potential_moves:
-        if len(board[room]) > 0 and len(bc.valid_transaction[room]) == 2: # Checks if potential move is a hallway that is occupied by another player.
+        if len(board[room]) > 0 and len(bc.valid_transitions[room]) == 2: # Checks if potential move is a hallway that is occupied by another player.
             potential_moves.remove(room)
     return potential_moves
 

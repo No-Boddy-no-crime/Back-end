@@ -99,6 +99,6 @@ def start_game(game_id):  # noqa: E501
     new_game = db.update_game(game_board_id=game_id, new_game_state={"status": "in-play", "board": board})
     # Notify the players of the changed state
     # TODO: this currently throws an error
-    # turn_server.gameState(new_game)
-    # turn_server.gameTurn({game_id})
+    turn_server.gameState(new_game)
+    turn_server.gameTurn({game_id})
     return new_game
