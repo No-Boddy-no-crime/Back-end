@@ -1,6 +1,7 @@
 from multiprocessing.sharedctypes import Value
 import connexion
 import six
+from game_server.controllers import board_controller
 
 from game_server.models.error import Error  # noqa: E501
 from game_server.models.game import Game  # noqa: E501
@@ -87,12 +88,15 @@ def start_game(game_id):  # noqa: E501
 
     :rtype: Game
     """
+    game = db.get_game(game_board_id=game_id)
     # Pick guilty cards
     casefile = cards.pick_casefile(game_id)
     # Deal the remaining cards
     players, visible_cards = cards.deal_remaining_cards(game_id, casefile)
+    # put the players in position
+    board = board_controller.start_game_board(game)
     # Change the game status
-    new_game = db.update_game(game_board_id=game_id, new_game_state={"status": "in-play"})
+    new_game = db.update_game(game_board_id=game_id, new_game_state={"status": "in-play", "board": board})
     # Notify the players of the changed state
     # TODO: this currently throws an error
     # turn_server.gameState(new_game)

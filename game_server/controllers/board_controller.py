@@ -45,6 +45,29 @@ valid_transitions = [[1, 5, 20],
                         [18, 20],
                         [19, 15, 0]]
 
+def start_game_board(game):
+    board = game["board"]
+    players = game["players"]
+    if board is None:
+        board = [[] for _ in range(20)]
+    print(room_mapping["ballroom_to_kitchen"])
+    for player in players:
+        if player["character_name"] == "Miss Scarlet":
+            board[room_mapping["hall_to_lounge"]].append(player["player_id"])
+        elif player["character_name"] == "Mrs White":
+            board[room_mapping["ballroom_to_kitchen"]].append(player["player_id"])
+        elif player["character_name"] == "Mrs Peacock":
+            board[room_mapping["library_to_conservatory"]].append(player["player_id"])
+        elif player["character_name"] == "Mr Green":
+            board[room_mapping["conservatory_to_ballroom"]].append(player["player_id"])
+        elif player["character_name"] == "Professor Plum":
+            board[room_mapping["study_to_library"]].append(player["player_id"])
+        elif player["character_name"] == "Colonel Mustard":
+            board[room_mapping["lounge_to_dining"]].append(player["player_id"])
+        else:
+            board[room_mapping["billard_to_dining"]].append(player["player_id"])
+    return board
+
 def check_move(from_room, to_room):
     if to_room in valid_transitions[from_room]:
         return True
