@@ -68,21 +68,7 @@ const createGame = () =>{
    );
 }
 
-const createPlayer = () => {
-    $.ajax(
-        {
-            url: `/v1/games/${document.getElementById('game_id_string_create_player').value}/players`, 
-            type: 'POST',
-            success: function(response) { 
-                appendServerResponse2(`Created player: ` + JSON.stringify(response))
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                console.log(xhr.status);
-                console.log(thrownError);
-            }
-        }
-   );
-}
+
 
 const getPlayerInfo = () => {
     $.ajax(
@@ -97,61 +83,4 @@ const getPlayerInfo = () => {
             }
         }
    );
-}
-
-const makeAccusation = (payload) => {
-    $.ajax(
-        {
-            url: `/v1/games/${document.getElementById('game_id_accSug').value}/players/${document.getElementById('player_id_accSug').value}/accusation`, 
-            data: payload, 
-            type: 'POST',
-            success: function(response) { 
-                appendServerResponse2(`Made accusation: ` + JSON.stringify(response))
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                console.log(xhr.status);
-                console.log(thrownError);
-            }
-        }
-   );
-}
-
-const makeSuggestion = (payload) => {
-    $.ajax(
-        {
-            url: `/v1/games/${document.getElementById('game_id_accSug').value}/players/${document.getElementById('player_id_accSug').value}/suggestion`, 
-            data: payload, 
-            type: 'POST',
-            success: function(response) { 
-                appendServerResponse2(`Made suggestion: ` + JSON.stringify(response))
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                console.log(xhr.status);
-                console.log(thrownError);
-            }
-        }
-   );
-}
-
-const movePlayer = (payload) => {
-    $.ajax(
-        {
-            url: `/v1/games/${document.getElementById('game_id_move').value}/players/${document.getElementById('player_id_move').value}/move`, 
-            data: payload, 
-            type: 'POST',
-            success: function(response) { 
-                appendServerResponse2(`Moved player: ` + JSON.stringify(response))
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                console.log(xhr.status);
-                console.log(thrownError);
-            }
-        }
-   );
-}
-const appendServerResponse2 = (msg) => {
-	if(msg == undefined) return
-	const div = document.createElement('div')
-	div.innerText = msg
-	document.getElementById('syncServerMessages').append(div)
 }

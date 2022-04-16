@@ -5,6 +5,7 @@
     <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src=https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js></script>
     <script src="../../static/js/inGame.js"></script>
+    <script src="../../static/js/asyncComm.js"></script>
     <link rel="stylesheet" href="../../static/css/default.css">
 </head>
 <body>
@@ -38,58 +39,162 @@
     </table>
     <table class="page-container">
         <tr>
-            <td>{{gameId}}</td>
-            <td>12</td>
-            <td>13</td>
-            <td>14</td>
-            <td>15</td>
-            <td>16</td>
-        </tr>
-        <tr>
-            <td>21</td>
-            <td>22</td>
-            <td>23</td>
-            <td>24</td>
-            <td>25</td>
-            <td>26</td>
-        </tr>
-        <tr>
-            <td>31</td>
-            <td>32</td>
-            <td>33</td>
-            <td>34</td>
-            <td>35</td>
-            <td>36</td>
-        </tr>
-        <tr>
-            <td>41</td>
-            <td>42</td>
-            <td>43</td>
-            <td>44</td>
-            <td>45</td>
-            <td>46</td>
-        </tr>
-        <tr>
-            <td>51</td>
-            <td>52</td>
-            <td>53</td>
-            <td>54</td>
-            <td>55</td>
-            <td>56</td>
-        </tr>
-        <tr>
-            <td>61</td>
-            <td>62</td>
-            <td>63</td>
-            <td>64</td>
-            <td>65</td>
-            <td>66</td>
-        </tr>
-        <tr>
-            <td colspan="100%" class="messageDivs">
-                ---Placeholder--- Location for printing out server messages
-                (e.g. player turn, suggestion updates, error messages, etc.)
+            <td style="width: 85%;">
+                <table id="gameBoard" style="table-layout: fixed; width: 100%;">
+                    <tr>
+                        <td class="outerBlockStyle"></td>
+                        <td class="outerBlockStyle"></td>
+                        <td class="outerBlockStyle"></td>
+                        <td class="outerBlockStyle"></td>
+                        <td class="outerBlockStyle">Scarlett Start</td>
+                        <td class="outerBlockStyle"></td>
+                        <td class="outerBlockStyle"></td>
+                    </tr>
+                    <tr>
+                        <td class="outerBlockStyle"></td>
+                        <td class="roomStyle">Study</td>
+                        <td class="hallwayStyle">hallway</td>
+                        <td class="roomStyle">Hall</td>
+                        <td class="hallwayStyle">hallway</td>
+                        <td class="roomStyle">Lounge</td>
+                        <td class="outerBlockStyle"></td>
+                    </tr>
+                    <tr>
+                        <td class="outerBlockStyle">Plum Start</td>
+                        <td class="hallwayStyle">hallway</td>
+                        <td class="outerBlockStyle"></td>
+                        <td class="hallwayStyle">hallway</td>
+                        <td class="outerBlockStyle"></td>
+                        <td class="hallwayStyle">hallway</td>
+                        <td class="outerBlockStyle">Mustard Start</td>
+                    </tr>
+                    <tr>
+                        <td class="outerBlockStyle"></td>
+                        <td class="roomStyle">Library</td>
+                        <td class="hallwayStyle">hallway</td>
+                        <td class="roomStyle">Billiard Room</td>
+                        <td class="hallwayStyle">hallway</td>
+                        <td class="roomStyle">Dining Room</td>
+                        <td class="outerBlockStyle"></td>
+                    </tr>
+                    <tr>
+                        <td class="outerBlockStyle">Peacock Start</td>
+                        <td class="hallwayStyle">hallway</td>
+                        <td class="outerBlockStyle"></td>
+                        <td class="hallwayStyle">hallway</td>
+                        <td class="outerBlockStyle"></td>
+                        <td class="hallwayStyle">hallway</td>
+                        <td class="outerBlockStyle"></td>
+                    </tr>
+                    <tr>
+                        <td class="outerBlockStyle"></td>
+                        <td class="roomStyle">Conservatory</td>
+                        <td class="hallwayStyle">hallway</td>
+                        <td class="roomStyle">Ballroom</td>
+                        <td class="hallwayStyle">hallway</td>
+                        <td class="roomStyle">Kitchen</td>
+                        <td class="outerBlockStyle"></td>
+                    </tr>
+                    <tr>
+                        <td class="outerBlockStyle"></td>
+                        <td class="outerBlockStyle"></td>
+                        <td class="outerBlockStyle">Green Start</td>
+                        <td class="outerBlockStyle"></td>
+                        <td class="outerBlockStyle">White Start</td>
+                        <td class="outerBlockStyle"></td>
+                        <td class="outerBlockStyle"></td>
+                    </tr>
+                </table>
             </td>
+            <td id="playerNotes" style="width: 15%; border: solid 2px; background-color: lightgrey;">
+                <h4>Who:</h4>
+                <input type="checkbox" class="userNotes"><span>Mr. Green</span><br>
+                <input type="checkbox" class="userNotes"><span>Col. Mustard</span><br>
+                <input type="checkbox" class="userNotes"><span>Mrs. White</span><br>
+                <input type="checkbox" class="userNotes"><span>Mrs. Peacock</span><br>
+                <input type="checkbox" class="userNotes"><span>Prof. Plum</span><br>
+                <input type="checkbox" class="userNotes"><span>Miss Scarlet</span><br>
+                
+                <h4>What:</h4>
+                <input type="checkbox" class="userNotes"><span>Candlestick</span><br>
+                <input type="checkbox" class="userNotes"><span>Dagger</span><br>
+                <input type="checkbox" class="userNotes"><span>Lead Pipe</span><br>
+                <input type="checkbox" class="userNotes"><span>Revolver</span><br>
+                <input type="checkbox" class="userNotes"><span>Rope</span><br>
+                <input type="checkbox" class="userNotes"><span>Wrench</span><br>
+
+                <h4>Where:</h4>
+                <input type="checkbox" class="userNotes"><span>Ballroom</span><br>
+                <input type="checkbox" class="userNotes"><span>Billiard Room</span><br>
+                <input type="checkbox" class="userNotes"><span>Conservatory</span><br>
+                <input type="checkbox" class="userNotes"><span>Dining Room</span><br>
+                <input type="checkbox" class="userNotes"><span>Hall</span><br>
+                <input type="checkbox" class="userNotes"><span>Kitchen</span><br>
+                <input type="checkbox" class="userNotes"><span>Library</span><br>
+                <input type="checkbox" class="userNotes"><span>Lounge</span><br>
+                <input type="checkbox" class="userNotes"><span>Study</span><br>
+            </td>
+        </tr>
+    </table>
+    <table class="page-container">
+        <tr>
+            <td style="width: 50%; border: solid 2px;">
+                <h4>Player actions:</h4>
+                <p>Player movement:
+                    <select name="move_player_select" id="move_player_select">
+                        <option>--none selected--</option>
+                        <option>Up</option>
+                        <option>Right</option>
+                        <option>Down</option>
+                        <option>Left</option>
+                        <option>Secret Passage</option>
+                    </select>
+                    <button type="button" id='move_player_button'>Move</button>
+                </p>
+                <div id="selection_boxes">
+                    <select name="who_select" id="who_select">
+                        <option>--Who--</option>
+                        <option>Miss Scarlet</option>
+                        <option>Col. Mustard</option>
+                        <option>Mrs. White</option>
+                        <option>Mr. Green</option>
+                        <option>Mrs. Peacock</option>
+                        <option>Prof. Plum</option>
+                    </select>
+                    <select name="what_select" id="what_select">
+                        <option>--What--</option>
+                        <option>Revolver</option>
+                        <option>Dagger</option>
+                        <option>Lead Pipe</option>
+                        <option>Rope</option>
+                        <option>Candlestick</option>
+                        <option>Wrench</option>
+                    </select>
+                    <select name="where_select" id="where_select">
+                        <option>--Where--</option>
+                        <option>Study</option>
+                        <option>Hall</option>
+                        <option>Lounge</option>
+                        <option>Library</option>
+                        <option>Billiard Room</option>
+                        <option>Dining Room</option>
+                        <option>Conservatory</option>
+                        <option>Ballroom</option>
+                        <option>Kitchen</option>
+                    </select>
+                </div>
+                <div>
+                    <button id='make_suggestion_button'>Make a Suggestion</button>
+                    <button id='make_accusation_button'>Make an Accusation</button>
+                </div>
+            </td>
+            <td style="width: 50%; border: solid 2px">
+                ---Placeholder--- <br>
+                Player cards and shared cards will go here.
+            </td>
+        </tr>
+        <tr>
+            <td colspan="100%" id="syncServerMessages" class="messageDivs"></td>
         </tr>
     </table>
 </body>
