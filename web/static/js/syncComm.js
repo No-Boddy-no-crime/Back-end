@@ -68,21 +68,7 @@ const createGame = () =>{
    );
 }
 
-const createPlayer = () => {
-    $.ajax(
-        {
-            url: `/v1/games/${document.getElementById('game_id_string_create_player').value}/players`, 
-            type: 'POST',
-            success: function(response) { 
-                appendServerResponse2(`Created player: ` + JSON.stringify(response))
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                console.log(xhr.status);
-                console.log(thrownError);
-            }
-        }
-   );
-}
+
 
 const getPlayerInfo = () => {
     $.ajax(
