@@ -40,4 +40,8 @@ const appendGame = (game) => {
     availGamesDiv.append(newGameDiv);
 }
 
+const updateLink = () => {
+    document.getElementById('joinGameLink').href = `/inGame/${document.getElementById('game_id_string').value}`
+}
+
 

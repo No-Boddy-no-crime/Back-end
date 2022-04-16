@@ -23,7 +23,7 @@ def server_cannot_handle_request(e):
 @app.route('/')
 def home():
     print('Server: serving index.html')
-    return render_template('index.html', async_mode=socketio.async_mode)
+    return render_template('index.html', gameId=67, async_mode=socketio.async_mode)
 
 @app.route('/findGame', methods=('GET', 'POST'))
 def findGame():
@@ -34,6 +34,13 @@ def findGame():
 def createGame():
     print('Server: serving createGame.html')
     return render_template('createGame.html', async_mode=socketio.async_mode)
+
+@app.route('/inGame/<gameId>', methods=('GET', 'POST'))
+def inGame(gameId):
+    print(gameId)
+    gameId = gameId
+    print('Server: serving inGame.html')
+    return render_template('inGame.html', gameId=gameId, async_mode=socketio.async_mode)
 
 def main():
     global app

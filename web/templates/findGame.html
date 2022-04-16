@@ -47,10 +47,11 @@
                     type="text" 
                     id="game_id_string" placeholder="Inpute Game ID"
                 >   
-                <a href="joined-game.html">
+                <a id="joinGameLink" href="/inGame/0">
                     <button
                         id="join_game_by_id_button"
                         class="small-button-style"
+                        onclick="updateLink()"
                     >
                         Join!
                     </button>
