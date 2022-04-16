@@ -13,7 +13,7 @@
     <table class="page-container">
         <tr>
             <td style="text-align: left;">
-                <a href="index.html">
+                <a href="{{ url_for('home') }}">
                     <img
                         id="homebutton"
                         alt="image"
@@ -35,7 +35,7 @@
         </tr>
         <tr>
             <td colspan="3" style="text-align: center;">
-                <a href="find-a-game.html">
+                <a href="{{ url_for('findGame') }}">
                     <button
                         id="find_game_button"
                         class="button-style"
@@ -47,7 +47,7 @@
         </tr>
         <tr>
             <td colspan="3" style="text-align: center;">
-                <a href="join-a-game.html">
+                <a href="{{ url_for('joinGame') }}">
                     <button
                         id="view_available_games_button"
                         class="button-style"
@@ -59,7 +59,7 @@
         </tr>
         <tr>
             <td colspan="3" style="text-align: center;">
-                <a href="joined-game.html">
+                <a href="{{ url_for('createGame') }}">
                     <button
                         id="create_game_button"
                         class="button-style"
