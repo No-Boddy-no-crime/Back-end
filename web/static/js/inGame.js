@@ -4,7 +4,7 @@ var playerId = undefined;
     const gameId 
         - found in html
         game_id of current game board
-        
+    
     const startGame
         - bool whether or not to start game
 */
