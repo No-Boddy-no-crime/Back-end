@@ -35,12 +35,13 @@ def createGame():
     print('Server: serving createGame.html')
     return render_template('createGame.html', async_mode=socketio.async_mode)
 
-@app.route('/inGame/<gameId>', methods=('GET', 'POST'))
-def inGame(gameId):
+@app.route('/inGame/<gameId>/<startGame>', methods=('GET', 'POST'))
+def inGame(gameId, startGame):
     print(gameId)
     gameId = gameId
+    startGame=startGame
     print('Server: serving inGame.html')
-    return render_template('inGame.html', gameId=gameId, async_mode=socketio.async_mode)
+    return render_template('inGame.html', gameId=gameId, startGame=startGame, async_mode=socketio.async_mode)
 
 def main():
     global app

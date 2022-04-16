@@ -41,7 +41,7 @@ const appendGame = (game) => {
 }
 
 const updateLink = () => {
-    document.getElementById('joinGameLink').href = `/inGame/${document.getElementById('game_id_string').value}`
+    document.getElementById('joinGameLink').href = `/inGame/${document.getElementById('game_id_string').value}/false`
 }
 
 
