@@ -40,7 +40,8 @@ def create_game(init = False):
             "status": "new",
             "players": []}
     get_games_collection().insert_one(game)
-    return game.pop("_id")
+    game.pop("_id")
+    return game
 
 
 def get_games(limit = None):
@@ -53,20 +54,26 @@ def get_games(limit = None):
     return games
 
 def get_game(game_board_id = None):
+    print("Getting a game")
     if game_board_id:
+        game_board_id = int(game_board_id)
         game = get_games_collection().find_one({"game_board_id": game_board_id}, {'_id': False})
     else:
         game = get_games_collection().find_one()
+        print("Game", game)
     if game is None:
         raise ValueError('Game not found')
     return game
 
 def delete_game(game_board_id):
+    game_board_id = int(game_board_id)
     deleted = get_games_collection().delete_one({"game_board_id": game_board_id})
+    CURRENT_GAMES.remove(game_board_id)
     if deleted.deleted_count == 0:
         raise ValueError("No game found")
     
 def update_game(game_board_id, new_game_state):
+    game_board_id = int(game_board_id)
     new_game = get_games_collection().find_one_and_update({"game_board_id": game_board_id}, 
                                                             {'$set': new_game_state},
                                                             projection={'_id': False}, 
@@ -76,12 +83,14 @@ def update_game(game_board_id, new_game_state):
     return new_game
 
 def update_player(game_board_id, player_id, update):
-    # {userID:1, "solutions.textID":2}, {$set: {"solutions.$.solution": "the new text"}}
-    get_games_collection().find_one_and_update({"game_id": game_board_id, "players.player_id": player_id}, {"$set": update})
+    game_board_id = int(game_board_id)
+    player_id = int(player_id)
+    print(get_games_collection().find_one_and_update({"game_board_id": game_board_id, "players.player_id": player_id}, {"$set": {"players.$.status": "post-accusation"}}))
 
 
 def create_player(game_board_id):
     # TODO: race condition here
+    game_board_id = int(game_board_id)
     game = get_games_collection().find_one({"game_board_id": game_board_id}, {"_id": 0})
     
     if game is None:
@@ -99,16 +108,20 @@ def create_player(game_board_id):
     player = {
         "player_id": player_id,
         "character_name": list(available_characters)[0],
-        "cards": None
+        "cards": None,
+        "status": "in-play"
     }
     get_games_collection().find_one_and_update({"game_board_id": game_board_id}, {"$push" : {"players": player}})
     return player
     
 def get_players(game_board_id):
+    game_board_id = int(game_board_id)
     return list(get_games_collection().find_one({"game_board_id": game_board_id}, 
                                             {"players": 1, "_id": 0})["players"])
 
 def get_player(game_board_id, player_id):
+    game_board_id = int(game_board_id)
+    player_id = int(player_id)
     player = get_games_collection().find_one({"game_board_id": game_board_id}, 
                                        {"players": {"$elemMatch" : {"player_id": player_id}}})["players"][0]
     return player

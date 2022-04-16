@@ -8,7 +8,7 @@ from game_server import util
 import game_server.db.database as db
 import game_server.controllers.card_controller as cards
 import turn_server.turn_server as turn_server
-from flask import abort
+from flask import abort, jsonify
 
 
 def create_game():  # noqa: E501
@@ -21,6 +21,7 @@ def create_game():  # noqa: E501
     """
     try:
         game = db.create_game()
+        print(game)
     except ValueError as e:
         abort(503, str(e))
     return jsonify(game)
@@ -89,12 +90,11 @@ def start_game(game_id):  # noqa: E501
     # Pick guilty cards
     casefile = cards.pick_casefile(game_id)
     # Deal the remaining cards
-    players, visible_cards = cards.deal_remain_cards(game_id, casefile)
+    players, visible_cards = cards.deal_remaining_cards(game_id, casefile)
     # Change the game status
     new_game = db.update_game(game_board_id=game_id, new_game_state={"status": "in-play"})
     # Notify the players of the changed state
-    # TODO: this might not be right
-    # TODO: not a real function yet
-    turn_server.gameState(new_game)
-    turn_server.gameTurn({game_id})
+    # TODO: this currently throws an error
+    # turn_server.gameState(new_game)
+    # turn_server.gameTurn({game_id})
     return new_game

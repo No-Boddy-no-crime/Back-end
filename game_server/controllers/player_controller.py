@@ -12,6 +12,7 @@ from game_server.controllers.card_controller import CULPRIT, ROOM
 import game_server.controllers.board_controller as board_controller
 import turn_server.turn_server as turn_server 
 import game_server.db.database as db
+from flask import abort
 
 
 def create_player(game_id):  # noqa: E501
@@ -24,10 +25,13 @@ def create_player(game_id):  # noqa: E501
 
     :rtype: Player
     """
-    return db.create_player(game_board_id=game_id)
+    try:
+        return db.create_player(game_board_id=game_id)
+    except IndexError as e:
+        abort(503, str(e))
 
 
-def make_accusation(game_id, player_id, card_set):  # noqa: E501
+def make_accusation(game_id, player_id):  # noqa: E501
     """Create a new player accusation
 
      # noqa: E501
@@ -45,15 +49,15 @@ def make_accusation(game_id, player_id, card_set):  # noqa: E501
         card_set = CardSet.from_dict(connexion.request.get_json())  # noqa: E501
     game = db.get_game(game_id)
     case_file = set(game["casefile"])
-    if case_file == set(card_set):
+    if case_file == set([card_set.character_name, card_set.room, card_set.weapon]):
         turn_server.notify_players_of_winner(game_id, player_id)
         return True
     # this is a positional update
     db.update_player(game_id, player_id, {"players.$.status": "post-accusation"})
-    return {}
+    return False
 
 
-def make_suggestion(game_id, player_id, card_set):  # noqa: E501
+def make_suggestion(game_id, player_id):  # noqa: E501
     """Create a new player suggestion
 
      # noqa: E501
