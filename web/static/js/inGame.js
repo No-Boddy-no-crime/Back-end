@@ -1,5 +1,7 @@
 var gameState = {}
+var playerName = undefined;
 var playerId = undefined;
+var playerPos = undefined;
 /*
     const gameId 
         - found in html
@@ -25,6 +27,8 @@ $(document).ready(function(){
 
     joinGame();
     initAsyncComms();
+
+    document.getElementById('move_player_button').onclick = function(){ movePlayerUI() };
 });
 
 const createPlayer = () => {
@@ -119,3 +123,158 @@ const appendServerResponse2 = (msg) => {
 	div.innerText = msg
 	document.getElementById('syncServerMessages').append(div)
 }
+
+const initPlayerActions = () => {
+
+}
+
+const initMovementButton = () => {
+
+}
+
+const allowableMoves = (pos) => {
+    $("#move_player_select").empty();
+    const allowed = [];
+
+    if(pos == 0) {
+        allowed.push('Right');
+        allowed.push('Down');
+        allowed.push('Secret Passage');
+    } else if(pos == 1) {
+        allowed.push('Right');
+        allowed.push('Left');
+    } else if(pos == 2) {
+        allowed.push('Right');
+        allowed.push('Left');
+        allowed.push('Down');
+    } else if(pos == 3) {
+        allowed.push('Right');
+        allowed.push('Left');
+    } else if(pos == 4) {
+        allowed.push('Left');
+        allowed.push('Down');
+    }
+
+    else if(pos == 5) {
+        allowed.push('Up');
+        allowed.push('Down');
+    } else if(pos == 6) {
+        allowed.push('Up');
+        allowed.push('Down');
+    }
+    else if(pos == 7) {
+        allowed.push('Up');
+        allowed.push('Down');
+    }
+
+    else if(pos == 8) {
+        allowed.push('Up');
+        allowed.push('Down');
+        allowed.push('Right');
+    } else if(pos == 9) {
+        allowed.push('Right');
+        allowed.push('Left');
+    } else if(pos == 10) {
+        allowed.push('Up');
+        allowed.push('Down');
+        allowed.push('Right');
+        allowed.push('Left');
+    } else if(pos == 11) {
+        allowed.push('Right');
+        allowed.push('Left');
+    } else if(pos == 12) {
+        allowed.push('Up');
+        allowed.push('Down');
+        allowed.push('Left');
+    }
+
+    else if(pos == 13) {
+        allowed.push('Up');
+        allowed.push('Down');
+    } else if(pos == 14) {
+        allowed.push('Up');
+        allowed.push('Down');
+    }
+    else if(pos == 15) {
+        allowed.push('Up');
+        allowed.push('Down');
+    }
+
+    else if(pos == 16) {
+        allowed.push('Up');
+        allowed.push('Right');
+        allowed.push('Secret Passage');
+    } else if(pos == 17) {
+        allowed.push('Right');
+        allowed.push('Left');
+    } else if(pos == 18) {
+        allowed.push('Right');
+        allowed.push('Left');
+        allowed.push('Up');
+    } else if(pos == 19) {
+        allowed.push('Right');
+        allowed.push('Left');
+    } else if(pos == 20) {
+        allowed.push('Left');
+        allowed.push('Up');
+        allowed.push('Secret Passage');
+    }
+
+    allowed.forEach((item) => {
+        $('#move_player_select').append($('<option>', {
+            value: item,
+            text: item
+        }));
+    })
+}
+
+const getEndPosFromMove = (move, start) => {
+    if(move == 'Right') return start + 1; 
+    else if(move == 'Left') return start - 1;
+    else if(move == 'Up') {
+        if(start == 5 || start == 13) return start - 5;
+        else if(start == 6 || start == 14) return start - 4;
+        else if(start == 7 || start == 15) return start - 3;
+        else if(start == 8 || start == 16) return start - 3;
+        else if(start == 10 || start == 18) return start - 4;
+        else if(start == 12 || start == 20) return start - 5;
+    }
+    else if(move == 'Down'){
+        if(start == 5 || start == 13) return start + 3;
+        else if(start == 6 || start == 14) return start + 4;
+        else if(start == 7 || start == 15) return start + 5;
+        else if(start == 8 || start == 0) return start + 5;
+        else if(start == 10 || start == 2) return start + 4;
+        else if(start == 12 || start == 4) return start + 3;
+    }
+    else if(move == 'Secret Passage'){
+        if(start == 0) return 20;
+        else if(start == 4) return 16;
+        else if(start == 16) return 4;
+        else if(start == 20) return 0;
+    }
+}
+
+const movePlayerUI = () => {
+    const start = playerPos;
+    const move = document.getElementById('move_player_select').value;
+
+    const endPos = getEndPosFromMove(move, start);
+
+    const playerBox = document.createElement('div');
+    playerBox.innerText = playerName;
+    playerBox.id = `${playerName}`;
+
+    const oldLoc = document.getElementById(`${playerName}`);
+    if(oldLoc != null){
+        oldLoc.remove();
+    }
+
+    const newLoc = document.getElementById(`${endPos}`);
+    newLoc.append(playerBox);
+
+    allowableMoves(endPos);
+
+    playerPos = endPos;
+}
+
