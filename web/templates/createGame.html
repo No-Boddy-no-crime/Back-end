@@ -31,26 +31,14 @@
             </td>
         </tr>
         <tr>
-            <td colspan="3" style="text-align: center;">
-                <a href="{{ url_for('findGame') }}">
-                    <button
-                        id="find_game_button"
-                        class="button-style"
-                    >
-                        Find and Join a Game
-                    </button>
-                </a>
-            </td>
         </tr>
-        
         <tr>
             <td colspan="3" style="text-align: center;">
-                <a href="{{ url_for('createGame') }}">
+                <a id="joinGameLink" href="/inGame/0/true">
                     <button
-                        id="create_game_button"
                         class="button-style"
                     >
-                        Create a New Game
+                        Start Game!
                     </button>
                 </a>
             </td>

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Clue-Less</title>
+    <title>Clue-Less:</title>
     <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src=https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js></script>
+    <script src="static/js/findGame.js"></script>
     <link rel="stylesheet" href="../static/css/default.css">
 </head>
 <body>
@@ -32,25 +33,27 @@
         </tr>
         <tr>
             <td colspan="3" style="text-align: center;">
-                <a href="{{ url_for('findGame') }}">
-                    <button
-                        id="find_game_button"
-                        class="button-style"
-                    >
-                        Find and Join a Game
-                    </button>
-                </a>
+                <h2 style="color: maroon;">Available Games:</h2>
+            </td>
+        </tr>
+        <tr>
+            <td id="availGames" class="messageDivs" colspan="3" style="text-align: center;">
             </td>
         </tr>
         
         <tr>
             <td colspan="3" style="text-align: center;">
-                <a href="{{ url_for('createGame') }}">
+                <input 
+                    type="text" 
+                    id="game_id_string" placeholder="Inpute Game ID"
+                >   
+                <a id="joinGameLink" href="/inGame/0">
                     <button
-                        id="create_game_button"
-                        class="button-style"
+                        id="join_game_by_id_button"
+                        class="small-button-style"
+                        onclick="updateLink()"
                     >
-                        Create a New Game
+                        Join!
                     </button>
                 </a>
             </td>
