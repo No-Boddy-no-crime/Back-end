@@ -46,6 +46,7 @@ def make_accusation(game_id, player_id, card_set):  # noqa: E501
     game = db.get_game(game_id)
     case_file = set(game["casefile"])
     if case_file == set(card_set):
+        # TODO: not a real function yet
         turn_server.notify_players_of_winner(player_id)
         return True
     # this is a positional update
@@ -83,15 +84,17 @@ def make_suggestion(game_id, player_id, card_set):  # noqa: E501
         if len(matching_cards) == 0:
             continue
         elif len(matching_cards) == 1:
+            # TODO: not a real function yet
             turn_server.notify_players_of_rebutall(other_player["player_id"])
             rebuttal = {"player_id": other_player["player_id"], "rebuttal_card": matching_cards.pop()}
             return rebuttal
         else:
-            #TODO this needs the real turn server implementation
+            # TODO: not a real function yet
             rebuttal = turn_server.notify_player_to_rebute(other_player["player_id"], list(matching_cards))
             return rebuttal
     
     # if we are here, there was no rebute
+    # TODO: not a real function yet
     turn_server.notify_players_no_rebute(card_set)
     return {}
 
@@ -124,10 +127,10 @@ def move_player(game_id, player_id, move):  # noqa: E501
     """
     if connexion.request.is_json:
         move = Move.from_dict(connexion.request.get_json())  # noqa: E501
-    #TODO: all the room checks
-    board_controller.check_move(move., to_room)
-    board_controller.update_game_board_with_move(player_id)
-    return 'do some magic!'
+    if board_controller.check_move(move.from_room, move.to_room):
+        board_controller.update_game_board_with_move(player_id)
+    else:
+        return 'illegal move'
 
 
 def show_player_by_id(game_id, player_id):  # noqa: E501
