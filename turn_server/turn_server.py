@@ -3,6 +3,7 @@ from flask_socketio import SocketIO, emit, join_room
 import game_server.db.database as db
 from bson import json_util
 import json
+from game_server.controllers import board_controller as bc
 
 socketio = SocketIO()
 
@@ -37,7 +38,7 @@ def joinGame(message):
     char_name = message['character_name'] # gets the player's chosen character
     id = request.sid
     join_room(room_id)
-
+    print(f"{char_name} Joined Room.")
     #update the player information in the db with the player's session id.
     db.get_games_collection().find_one_and_update({"game_board_id": room_id, 'players.character_name':char_name}, {"$set" : {"players.$.sid": id}})
     emit("connect","New Player Joined", to=room_id)
@@ -45,31 +46,48 @@ def joinGame(message):
 
 @socketio.event
 def gameTurn(message): 
-    """Handles request for gameTurn. Initial call to gameTurn should come from a game start. Subsequent calls will be when a player's turn has ended."""
-    room_id = message['game_board_id']
+    """Handles request for gameTurn. Initial call to gameTurn should come from a game start. Subsequent calls will be when a player's turn has ended.
+       Does not currently check if player had been moved to room by a suggestion or if player moved voluntarily."""
+    if isinstance(message, dict):
+        room_id = message['game_board_id']
+    else:
+        room_id = message
     try: # Check to see if the game has already initiated a turn.
         turn[room_id] +=1
     except:
         turn[room_id] = 0
-    players = [item['character_name'] for item in db.get_players(room_id)] # retrieve all players in the game.
+    players = [player['character_name'] for player in db.get_game(room_id)['players']] # retrieve all players in the game.
     indexes = [turn_order.index(player) for player in players] 
     sorted_players = [p for _,p in sorted(zip(indexes, players))] # sort players by designated turn order.
     idx = (turn[room_id] + len(sorted_players)) % len(sorted_players) # get the index of the next active player.
 
     # retrieve the session id of the active player.
-    id = db.get_games_collection().find_one({"game_board_id": room_id}, 
-                                       {"players": {"$elemMatch" : {"character_name": sorted_players[idx]}}})["players"][0]['sid']
-    # inform the active player that it is their turn.
-    #TODO Query player locations and return available moves.
-    emit('gameTurn', 'It is your turn', to=id)
+    active_player = db.get_games_collection().find_one({"game_board_id": room_id}, 
+                                       {"players": {"$elemMatch" : {"character_name": sorted_players[idx]}}})["players"][0]
+    
+
+    id = active_player['sid']
+    board = db.get_game(room_id)['board']
+    # Assumes we are updating the db with current position as player attribute.
+    current_position = active_player['room']
+    options = check_possible_moves(board, current_position)
+    emit('gameTurn', {'moves':options}, to=id)
 
 
 @socketio.event
 def gameState(message):
-    """ Handles request for game state."""
-    room_id = message['game_board_id']
-    game_state = json.loads(json_util.dumps(db.get_game(game_board_id=room_id)))
-    print(game_state)
+    """ Handles request for game state. Functions as event handler for client request for game state or function to broadcast updated game state called by game_server."""
+    if isinstance(message, dict):
+        try: #request came from client.
+            id = request.sid
+            room_id = message['game_board_id']
+            game_state = json.loads(json_util.dumps(db.get_game(game_board_id=room_id)))
+            
+        except: #request came from game_server
+            game_state = message
+    else:
+        room_id = message  
+        game_state = json.loads(json_util.dumps(db.get_game(game_board_id=room_id)))
     emit('GameState', game_state, to=room_id)
     
 
@@ -78,7 +96,7 @@ def notify_players_of_winner(game_id, player_id):
     character = db.get_games_collection().find_one({"game_board_id": game_id}, 
                                        {"players": {"$elemMatch" : {"player_id": player_id}}})["players"][0]['character_name']
     msg = f"{character} has won the game!!!"
-    socketio.emit('gameOver', msg, to = game_id)
+    socketio.emit('gameOver', msg, to=game_id)
 
 
 
@@ -103,7 +121,15 @@ def notify_player_to_rebute(game_id, other_player_id, matching_cards):
     if rebuttal is None:
         rebuttal = matching_cards[0]
     return rebuttal
-    
+
+
+def check_possible_moves(board, position):
+    potential_moves = bc.valid_transitions[bc.room_mapping[position]]
+    for room in potential_moves:
+        if len(board[room]) > 0 and len(bc.valid_transaction[room]) == 2: # Checks if potential move is a hallway that is occupied by another player.
+            potential_moves.remove(room)
+    return potential_moves
+
 
 
 def update_rebuttal(card):

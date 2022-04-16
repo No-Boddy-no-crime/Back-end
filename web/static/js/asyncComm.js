@@ -33,8 +33,8 @@ const updateGameState = (msg) => {
 }
 
 /* requests to server */
-const joinGame = () => send('joinGame', {game_board_id: 239})
-const checkForTurn = () => send('gameTurn')
+const joinGame = () => send('joinGame', {game_board_id: 452, character_name: 'Colonel Mustard'})
+const checkForTurn = () => send('gameTurn', {game_board_id: 452})
 const requestGameState = () => send('gameState')
 
 /* main query point */

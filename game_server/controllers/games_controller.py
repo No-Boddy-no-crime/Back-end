@@ -7,7 +7,7 @@ from game_server.models.game import Game  # noqa: E501
 from game_server import util
 import game_server.db.database as db
 import game_server.controllers.card_controller as cards
-import turn_server.turn_server
+import turn_server.turn_server as turn_server
 from flask import abort
 
 
@@ -95,5 +95,5 @@ def start_game(game_id):  # noqa: E501
     # Notify the players of the changed state
     # TODO: this might not be right
     turn_server.gameState(new_game)
-    turn_server.gameTurn({'game_board_id':game_id})
+    turn_server.gameTurn({game_id})
     return new_game
