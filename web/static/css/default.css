@@ -51,3 +51,24 @@
 	max-height: 200px;
 	border: solid 2px;
 }
+
+.userNotes:checked + span {
+	text-decoration:line-through;
+}
+
+.roomStyle {
+	background-color: lightgray;
+	border: solid 2px;
+	text-align: center;
+}
+
+.hallwayStyle {
+	background-color: white;
+	border: dashed 2px;
+	text-align: center;
+}
+
+.outerBlockStyle {
+	background-color: gray;
+	height: 90px;
+}
