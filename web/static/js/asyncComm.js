@@ -13,10 +13,7 @@ const initListeners = () => {
 
 /* query server periodically */
 const initAsyncComms = () => {
-	asyncIDTurn = setInterval(function(){
-		console.log('jere')
-		checkForTurn(gameId)
-	}, MILLISECONDS_IN_A.SEC * 10)
+	asyncIDTurn = setInterval(checkForTurn, MILLISECONDS_IN_A.SEC * 10)
 
 	asyncIDState = setInterval(requestGameState, MILLISECONDS_IN_A.SEC * 10)
 }
@@ -31,8 +28,12 @@ const updateGameState = (msg) => {
 }
 
 /* requests to server */
-const joinGame = (gameId) => send('joinGame', {game_board_id: gameId, character_id: player.id})
-const checkForTurn = (gameId) => send('gameTurn', {game_board_id: gameId})
+const joinGame = () => {
+	console.log("joined game...")
+	console.log(JSON.stringify(`{game_board_id: ${gameId}, character_name: ${player.name}}`))
+	send('joinGame', {game_board_id: gameId, character_name: player.name})
+}
+const checkForTurn = () => send('gameTurn', {game_board_id: gameId})
 const requestGameState = () => send('gameState')
 
 /* main query point */
