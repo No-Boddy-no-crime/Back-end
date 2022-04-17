@@ -21,6 +21,7 @@ $(document).ready(function(){
 
     } else{
         createPlayer();
+        document.getElementById("startGameForReal").remove();
     }
 
     setTimeout(function(){
@@ -33,6 +34,23 @@ $(document).ready(function(){
 
     document.getElementById('move_player_button').onclick = function(){ movePlayerUI() };
 });
+
+const startGameBoard = () =>{
+    $.ajax(
+        {
+            url: `/v1/games/${gameId}`, 
+            type: 'POST',
+            success: function(response) { 
+                console.log('startGame')
+                document.getElementById("startGameForReal").remove();
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status);
+                console.log(thrownError);
+            }
+        }
+   );
+}
 
 const createPlayer = () => {
     $.ajax(
@@ -64,6 +82,8 @@ const createGame = () =>{
                 startGame = false;
                 console.log('creating player')
                 createPlayer();
+                document.getElementById("startGameForReal").disabled = false;
+                document.getElementById("startGameForReal").onclick = function(){ startGameBoard(); }
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 console.log(xhr.status);
@@ -295,6 +315,10 @@ const movePlayerUI = () => {
 
 function startingPos(character){
     
+    //skip over already added people
+    const old = document.getElementById(`${character.name}`);
+    if(old != undefined) return;
+
     const playerBox = document.createElement('div');
     playerBox.innerText = character.name;
     playerBox.id = `${character.name}`;
@@ -330,4 +354,14 @@ function startingPos(character){
     startBox.append(playerBox);
 
     allowableMoves(player.pos);
+}
+
+function updatePlayers(playerArr){
+    playerArr
+    .filter((otherPlayer) => otherPlayer['player_id'] != player.id )
+    .forEach((otherPlayer) => {
+        const character = {};
+        character.name = otherPlayer['character_name'] //TODO: fix this garbage
+        startingPos(character)
+    });
 }

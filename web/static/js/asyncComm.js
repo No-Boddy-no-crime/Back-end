@@ -8,12 +8,13 @@ const MILLISECONDS_IN_A = Object.freeze({SEC: 1000, MIN: 60000, HOUR: 3600000});
 const initListeners = () => {
 	socket.on('connect', (msg) => console.log(msg))
 	socket.on('gameTurn', (msg) => console.log(msg))
-	socket.on('GameState', (msg) => console.log(msg))
+	socket.on('GameState', (msg) => updateGameState(msg))
 }
 
 /* query server periodically */
 const initAsyncComms = () => {
 	asyncIDTurn = setInterval(function(){
+		console.log('jere')
 		checkForTurn(gameId)
 	}, MILLISECONDS_IN_A.SEC * 10)
 
@@ -23,8 +24,8 @@ const initAsyncComms = () => {
 /* internal state */
 const updateGameState = (msg) => {
 	if(msg == undefined) return
-	gameState = msg
-	appendServerResponse('Updated GameState')
+	
+	if(msg['status'] == 'new') updatePlayers(msg['players']);
 }
 
 /* requests to server */
