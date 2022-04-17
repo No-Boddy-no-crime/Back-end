@@ -17,7 +17,7 @@ CURRENT_GAMES = set()
 
 def setup_db(flask_app):
     global MONGO_DB
-    flask_app.config["MONGO_URI"] = "mongodb://localhost:27017/clueDB"
+    flask_app.config["MONGO_URI"] = "mongodb+srv://Heroku:Clue-L3ss_heroku@clue.pg9jj.mongodb.net/clueDB"
     MONGO_DB = PyMongo(flask_app).db
 
 def get_db():
@@ -128,7 +128,7 @@ def get_player(game_board_id, player_id):
 
 def __test_mongo():
     global MONGO_DB
-    MONGO_DB = pymongo.MongoClient("mongodb://localhost:27017/").clueDB
+    MONGO_DB = pymongo.MongoClient("mongodb+srv://Heroku:Clue-L3ss_heroku@clue.pg9jj.mongodb.net/clueDB").clueDB
 
 def __insert_a_few_games():
     for i in range(3):
