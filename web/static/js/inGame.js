@@ -33,6 +33,7 @@ $(document).ready(function(){
 
 
     document.getElementById('move_player_button').onclick = function(){ movePlayerUI() };
+    document.getElementById('make_suggestion_button').onclick = function(){ suggestPlayer(); };
     document.getElementById('make_accusation_button').onclick = function(){ accusePlayer(); };
 });
 
@@ -94,40 +95,6 @@ const createGame = () =>{
    );
 }
 
-const makeAccusation = (payload) => {
-    $.ajax(
-        {
-            url: `/v1/games/${{gameId}}/players/${{playerId}}/accusation`, 
-            data: payload, 
-            type: 'POST',
-            success: function(response) { 
-                appendServerResponse2(`Made accusation: ` + JSON.stringify(response))
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                console.log(xhr.status);
-                console.log(thrownError);
-            }
-        }
-   );
-}
-
-const makeSuggestion = (payload) => {
-    $.ajax(
-        {
-            url: `/v1/games/${{gameId}}/players/${{playerId}}/suggestion`, 
-            data: payload, 
-            type: 'POST',
-            success: function(response) { 
-                appendServerResponse2(`Made suggestion: ` + JSON.stringify(response))
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                console.log(xhr.status);
-                console.log(thrownError);
-            }
-        }
-   );
-}
-
 const compileMovePayload = (from, to) => ({
   "from_room": from,
   "to_room": to
@@ -162,15 +129,45 @@ const compileAccusePayload = () => ({
     "weapon": `${document.getElementById('what_select').value}`
 })
 
+const compileSuggestPayload = () => ({
+    "character_name": `${document.getElementById('who_select').value}`,
+    "player": {
+        "character_name": `${player.name}`,
+        "player_id": `${player.id}`
+    },
+    "room": `${document.getElementById('where_select').value}`,
+    "weapon": `${document.getElementById('what_select').value}`
+})
+
 const accusePlayer = () => {
     $.ajax(
         {
             url: `/v1/games/${gameId}/player/${player.id}/accusation`, 
+            data: JSON.stringify(compileSuggestPayload()), 
+            type: 'POST',
+            contentType: 'application/json',
+            success: function(response) { 
+                console.log("Accused Player");
+                console.log(JSON.stringify(response));
+                alert(JSON.stringify(response));
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status);
+                console.log(thrownError);
+            }
+        }
+   );
+}
+
+const suggestPlayer = () => {
+    $.ajax(
+        {
+            url: `/v1/games/${gameId}/player/${player.id}/suggestion`, 
             data: JSON.stringify(compileAccusePayload()), 
             type: 'POST',
             contentType: 'application/json',
             success: function(response) { 
-                console.log("Moved Player");
+                console.log("Suggested Player");
                 console.log(JSON.stringify(response));
                 alert(JSON.stringify(response));
             },
