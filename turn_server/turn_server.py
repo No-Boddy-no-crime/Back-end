@@ -10,6 +10,7 @@ socketio = SocketIO()
 turn = {}
 turn_order = ['Miss Scarlet', 'Colonel Mustard', 'Mrs White', 'Mr Green', 'Mrs Peacock', 'Professor Plum']
 rebuttal = None
+active_player = None
 
 
 def create_socketio(app):
@@ -48,6 +49,7 @@ def joinGame(message):
 def gameTurn(message): 
     """Handles request for gameTurn. Initial call to gameTurn should come from a game start. Subsequent calls will be when a player's turn has ended.
        Does not currently check if player had been moved to room by a suggestion or if player moved voluntarily."""
+    global active_player
     if isinstance(message, dict):
         room_id = message['game_board_id']
     else:
@@ -108,8 +110,9 @@ def gameState(message):
 
 
 def notify_players_of_winner(game_id, player_id):
-    character = db.get_games_collection().find_one({"game_board_id": game_id}, 
-                                       {"players": {"$elemMatch" : {"player_id": player_id}}})["players"][0]['character_name']
+    character = db.get_games_collection().find_one({"game_board_id": int(game_id)}, 
+                                       {"players": {"$elemMatch" : {"player_id": int(player_id)}}})['players'][0]['character_name']
+    print(f"Notifying Room: {game_id} that {character} has won the Game.")
     msg = f"{character} has won the game!!!"
     try:
         socketio.emit('gameOver', msg, to=game_id)
@@ -119,8 +122,9 @@ def notify_players_of_winner(game_id, player_id):
 
 
 def notify_players_of_rebutall(game_id, other_player_id):
-    character = db.get_games_collection().find_one({"game_board_id": game_id}, 
-                                       {"players": {"$elemMatch" : {"player_id": other_player_id}}})["players"][0]['character_name']
+    character = db.get_games_collection().find_one({"game_board_id": int(game_id)}, 
+                                       {"players": {"$elemMatch" : {"player_id": int(other_player_id)}}})["players"][0]['character_name']
+    print(f"Notifying Room: {game_id} that {character} has made a rebuttal.")
     msg = f"{character} has made a rebuttal."
     try:
         socketio.emit('rebuttal', msg, to=game_id)
@@ -134,8 +138,8 @@ def notify_player_to_rebute(game_id, other_player_id, matching_cards):
     rebuttal = None
     """Notify player to select a rebuttal card from a list of possible options. Requires client side callback to return selected card.
        If player does not make a choice within 10 seconds, returns first card in matches."""
-    id = db.get_games_collection().find_one({"game_board_id": game_id}, 
-                                       {"players": {"$elemMatch" : {"player_id": other_player_id}}})["players"][0]['sid']
+    id = db.get_games_collection().find_one({"game_board_id": int(game_id)}, 
+                                       {"players": {"$elemMatch" : {"player_id": int(other_player_id)}}})["players"][0]['sid']
     msg = {'cards':matching_cards}
     socketio.emit('chooseRebuttalCard', msg, to=id, callback=update_rebuttal)
     socketio.sleep(10)
@@ -159,6 +163,9 @@ def check_possible_moves(board, position):
             potential_moves.remove(room)
     return potential_moves
 
+
+def is_active_player(player_id):
+    return player_id == active_player['player_id']
 
 
 def update_rebuttal(card):
