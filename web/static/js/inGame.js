@@ -14,15 +14,22 @@ var player = { id: undefined, name: undefined, pos: undefined };
  */
 $(document).ready(function(){
     socket = io()
-    initListeners()
 
 	if(gameId == 0 && startGame == true ){
         console.log('creating game')
         createGame();
+
+    } else{
+        createPlayer();
     }
 
-    //joinGame();
-    //initAsyncComms();
+    setTimeout(function(){
+        initListeners()
+        initAsyncComms();
+        joinGame();
+    }, 500);
+
+
 
     document.getElementById('move_player_button').onclick = function(){ movePlayerUI() };
 });

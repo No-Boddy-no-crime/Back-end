@@ -28,7 +28,7 @@ const updateGameState = (msg) => {
 }
 
 /* requests to server */
-const joinGame = (gameId) => send('joinGame', {game_board_id: gameId, character_id: playerId})
+const joinGame = (gameId) => send('joinGame', {game_board_id: gameId, character_id: player.id})
 const checkForTurn = (gameId) => send('gameTurn', {game_board_id: gameId})
 const requestGameState = () => send('gameState')
 
