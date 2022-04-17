@@ -1,7 +1,5 @@
 var gameState = {}
-var playerName = undefined;
-var playerId = undefined;
-var playerPos = undefined;
+var player = { id: undefined, name: undefined, pos: undefined };
 /*
     const gameId 
         - found in html
@@ -22,11 +20,9 @@ $(document).ready(function(){
         console.log('creating game')
         createGame();
     }
-    console.log('creating player')
-    createPlayer();
 
-    joinGame();
-    initAsyncComms();
+    //joinGame();
+    //initAsyncComms();
 
     document.getElementById('move_player_button').onclick = function(){ movePlayerUI() };
 });
@@ -34,11 +30,14 @@ $(document).ready(function(){
 const createPlayer = () => {
     $.ajax(
         {
-            url: `/v1/games/${gameId}/players`, 
+            url: `/v1/games/${gameId}/player`, 
             type: 'POST',
             success: function(response) { 
                 console.log(`${JSON.stringify(response)}`);
                 //TODO: set player
+                player.name = response['character_name'];
+                player.id = response['player_id'];
+                startingPos(player);
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 console.log(xhr.status);
@@ -54,9 +53,10 @@ const createGame = () =>{
             url: '/v1/games', 
             type: 'POST',
             success: function(response) { 
-                console.log('response' + JSON.stringify(response))
-                gameId = response['id'];
+                gameId = response['game_board_id'];
                 startGame = false;
+                console.log('creating player')
+                createPlayer();
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 console.log(xhr.status);
@@ -124,14 +124,6 @@ const appendServerResponse2 = (msg) => {
 	document.getElementById('syncServerMessages').append(div)
 }
 
-const initPlayerActions = () => {
-
-}
-
-const initMovementButton = () => {
-
-}
-
 const allowableMoves = (pos) => {
     $("#move_player_select").empty();
     const allowed = [];
@@ -153,6 +145,7 @@ const allowableMoves = (pos) => {
     } else if(pos == 4) {
         allowed.push('Left');
         allowed.push('Down');
+        allowed.push('Secret Passage');
     }
 
     else if(pos == 5) {
@@ -220,6 +213,10 @@ const allowableMoves = (pos) => {
         allowed.push('Secret Passage');
     }
 
+    else if(typeof pos == 'string'){
+        allowed.push('hallway');
+    }
+
     allowed.forEach((item) => {
         $('#move_player_select').append($('<option>', {
             value: item,
@@ -229,6 +226,17 @@ const allowableMoves = (pos) => {
 }
 
 const getEndPosFromMove = (move, start) => {
+
+    if(move == 'hallway'){
+        if(start == 'scarlet') return 3;
+        else if(start == 'green') return 17;
+        else if(start == 'white') return 19;
+        else if(start == 'plum') return 5;
+        else if(start == 'mustard') return 7;
+        else if(start == 'peacock') return 13;
+    }
+
+
     if(move == 'Right') return start + 1; 
     else if(move == 'Left') return start - 1;
     else if(move == 'Up') {
@@ -256,16 +264,16 @@ const getEndPosFromMove = (move, start) => {
 }
 
 const movePlayerUI = () => {
-    const start = playerPos;
+    const start = player.pos;
     const move = document.getElementById('move_player_select').value;
 
     const endPos = getEndPosFromMove(move, start);
 
     const playerBox = document.createElement('div');
-    playerBox.innerText = playerName;
-    playerBox.id = `${playerName}`;
+    playerBox.innerText = player.name;
+    playerBox.id = `${player.name}`;
 
-    const oldLoc = document.getElementById(`${playerName}`);
+    const oldLoc = document.getElementById(`${player.name}`);
     if(oldLoc != null){
         oldLoc.remove();
     }
@@ -275,6 +283,44 @@ const movePlayerUI = () => {
 
     allowableMoves(endPos);
 
-    playerPos = endPos;
+    player.pos = endPos;
 }
 
+function startingPos(character){
+    
+    const playerBox = document.createElement('div');
+    playerBox.innerText = character.name;
+    playerBox.id = `${character.name}`;
+
+    let startId = undefined;
+
+    if(character.name == 'Miss Scarlet') {
+        player.pos = 'scarlet';
+        startId = 'sS'
+    }
+    else if(character.name == 'Mr Green'){
+        player.pos = 'green';
+        startId = 'gS';
+    }
+    else if(character.name == 'Mrs White'){
+        player.pos = 'white';
+        startId = 'wS';
+    }
+    else if(character.name == 'Professor Plum'){
+        player.pos = 'plum';
+        startId = 'plumS';
+    }
+    else if(character.name == 'Colonel Mustard'){
+        player.pos = 'mustard';
+        startId = 'mS';
+    }
+    else if(character.name == 'Mrs Peacock'){
+        player.pos = 'peacock';
+        startId = 'peaS';
+    }
+
+    const startBox = document.getElementById(startId)
+    startBox.append(playerBox);
+
+    allowableMoves(player.pos);
+}
