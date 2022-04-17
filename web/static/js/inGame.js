@@ -64,7 +64,7 @@ const createPlayer = () => {
                 //TODO: set player
                 player.name = response['character_name'];
                 player.id = response['player_id'];
-                startingPos(player);
+                startingPos(player, true);
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 console.log(xhr.status);
@@ -177,6 +177,38 @@ const suggestPlayer = () => {
             }
         }
    );
+}
+
+const getCards = () => {
+    $.ajax(
+        {
+            url: `/v1/games/${gameId}/player/${player.id}`,
+            type: 'GET',
+            contentType: 'application/json',
+            success: function(response) { 
+                console.log("Get Cards");
+                console.log(JSON.stringify(response));
+                displayCards(response['cards'])
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status);
+                console.log(thrownError);
+            }
+        }
+   );
+}
+
+const displayCards = (cardArr) => {
+    const cardCont = document.getElementById('playerCards');
+
+    cardArr.forEach((cardName, index) => {
+        if(document.getElementById((cardName + 'Card')) == null){
+            const card = document.createElement('div');
+            card.id = cardName + 'Card';
+            card.innerText = `${index}: ${cardName}`;
+            cardCont.append(card);
+        }
+    })
 }
 
 const appendServerResponse2 = (msg) => {
@@ -332,7 +364,7 @@ const movePlayerUI = () => {
     const endPos = getEndPosFromMove(move, start);
 
     const playerBox = document.createElement('div');
-    playerBox.innerText = player.name;
+    playerBox.innerText = player.name + '(You)';
     playerBox.id = `${player.name}`;
 
     const oldLoc = document.getElementById(`${player.name}`);
@@ -351,7 +383,7 @@ const movePlayerUI = () => {
     movePlayer(start, endPos);
 }
 
-function startingPos(character){
+function startingPos(character, directUser){
     
     //skip over already added people
     const old = document.getElementById(`${character.name}`);
@@ -359,6 +391,11 @@ function startingPos(character){
 
     const playerBox = document.createElement('div');
     playerBox.innerText = character.name;
+
+    if(directUser){
+        playerBox.innerText = playerBox.innerText + ' (You)';
+    }
+
     playerBox.id = `${character.name}`;
 
     let startId = undefined;
@@ -400,7 +437,7 @@ function updatePlayers(playerArr){
     .forEach((otherPlayer) => {
         const character = {};
         character.name = otherPlayer['character_name'] //TODO: fix this garbage
-        startingPos(character)
+        startingPos(character, false)
     });
 }
 
@@ -437,6 +474,7 @@ function updateBoardLoc(board, players){
             if(playerId == player.id){
                 allowableMoves(i);
                 player.pos = i;
+                playerBox.innerText = playerBox.innerText + '(You)';
             }
         }
     }

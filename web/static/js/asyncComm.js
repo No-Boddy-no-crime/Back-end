@@ -24,7 +24,10 @@ const updateGameState = (msg) => {
 	if(msg == undefined) return
 	if(msg['status'] == 'new') updatePlayers(msg['players']);
 
-	if(msg['status'] == 'in-play') updateBoard(msg);
+	if(msg['status'] == 'in-play'){
+		updateBoard(msg);
+		getCards();
+	}
 }
 
 /* requests to server */
