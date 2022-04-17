@@ -43,18 +43,16 @@ def inGame(gameId, startGame):
     print('Server: serving inGame.html')
     return render_template('inGame.html', gameId=gameId, startGame=startGame, async_mode=socketio.async_mode)
 
-def main():
-    global app
-    global mongo
-    setup_db(app.app)
-    print('Server: init main()')
-    app.app.json_encoder = encoder.JSONEncoder
-    app.add_api('openapi.yaml',
-                arguments={'title': 'Clue Game Server'},
-                pythonic_params=True)
-    create_socketio(app.app)
-    socketio.run(app,port=8080)
+
+setup_db(app.app)
+print('Server: init main()')
+app.app.json_encoder = encoder.JSONEncoder
+app.add_api('openapi.yaml',
+            arguments={'title': 'Clue Game Server'},
+            pythonic_params=True)
+create_socketio(app.app)
+
 
 
 if __name__ == '__main__':
-    main()
+    socketio.run(app,port=8080)
