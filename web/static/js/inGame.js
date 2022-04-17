@@ -33,6 +33,7 @@ $(document).ready(function(){
 
 
     document.getElementById('move_player_button').onclick = function(){ movePlayerUI() };
+    document.getElementById('make_accusation_button').onclick = function(){ accusePlayer(); };
 });
 
 const startGameBoard = () =>{
@@ -127,14 +128,51 @@ const makeSuggestion = (payload) => {
    );
 }
 
-const movePlayer = (payload) => {
+const compileMovePayload = (from, to) => ({
+  "from_room": from,
+  "to_room": to
+})
+
+const movePlayer = (from, to) => {
     $.ajax(
         {
-            url: `/v1/games/${{gameId}}/players/${{playerId}}/move`, 
-            data: payload, 
+            url: `/v1/games/${gameId}/player/${player.id}/move`, 
+            data: JSON.stringify(compileMovePayload(from, to)), 
             type: 'POST',
+            contentType: 'application/json',
             success: function(response) { 
-                appendServerResponse2(`Moved player: ` + JSON.stringify(response))
+                console.log("Moved Player");
+                console.log(JSON.stringify(response));
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status);
+                console.log(thrownError);
+            }
+        }
+   );
+}
+
+const compileAccusePayload = () => ({
+    "character_name": `${document.getElementById('who_select').value}`,
+    "player": {
+        "character_name": `${player.name}`,
+        "player_id": `${player.id}`
+    },
+    "room": `${document.getElementById('where_select').value}`,
+    "weapon": `${document.getElementById('what_select').value}`
+})
+
+const accusePlayer = () => {
+    $.ajax(
+        {
+            url: `/v1/games/${gameId}/player/${player.id}/accusation`, 
+            data: JSON.stringify(compileAccusePayload()), 
+            type: 'POST',
+            contentType: 'application/json',
+            success: function(response) { 
+                console.log("Moved Player");
+                console.log(JSON.stringify(response));
+                alert(JSON.stringify(response));
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 console.log(xhr.status);
@@ -311,6 +349,9 @@ const movePlayerUI = () => {
     allowableMoves(endPos);
 
     player.pos = endPos;
+
+    //server call
+    movePlayer(start, endPos);
 }
 
 function startingPos(character){
@@ -395,6 +436,11 @@ function updateBoardLoc(board, players){
             }
             const newLoc = document.getElementById(`${i}`);
             newLoc.append(playerBox);
+
+            if(playerId == player.id){
+                allowableMoves(i);
+                player.pos = i;
+            }
         }
     }
 }
