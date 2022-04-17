@@ -149,7 +149,11 @@ const accusePlayer = () => {
             success: function(response) { 
                 console.log("Accused Player");
                 console.log(JSON.stringify(response));
-                alert(JSON.stringify(response));
+
+                if(JSON.stringify(response) == 'true')
+                    alert('Correct Accusation - Winner');
+                else
+                    alert('Incorrect Accusation - Loser');
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 console.log(xhr.status);
@@ -211,7 +215,7 @@ const displayCards = (cardArr) => {
     })
 }
 
-const appendServerResponse2 = (msg) => {
+const appendServerResponse = (msg) => {
 	if(msg == undefined) return
 	const div = document.createElement('div')
 	div.innerText = msg

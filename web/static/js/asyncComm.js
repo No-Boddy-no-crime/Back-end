@@ -6,7 +6,7 @@ const MILLISECONDS_IN_A = Object.freeze({SEC: 1000, MIN: 60000, HOUR: 3600000});
 
 /* sockets listening post */
 const initListeners = () => {
-	socket.on('connect', (msg) => console.log(msg))
+	socket.on('connect', (msg) => appendServerResponse(msg))
 	socket.on('gameTurn', (msg) => console.log(msg))
 	socket.on('GameState', (msg) => updateGameState(msg))
 }
