@@ -23,9 +23,11 @@ const initAsyncComms = () => {
 
 /* internal state */
 const updateGameState = (msg) => {
+	console.log(msg)
 	if(msg == undefined) return
-	
 	if(msg['status'] == 'new') updatePlayers(msg['players']);
+
+	if(msg['status'] == 'in-play') updateBoard(msg);
 }
 
 /* requests to server */

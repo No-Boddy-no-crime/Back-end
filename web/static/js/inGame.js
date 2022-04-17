@@ -365,3 +365,44 @@ function updatePlayers(playerArr){
         startingPos(character)
     });
 }
+
+function updateBoard(msg){
+    const board = msg['board'];
+    const players = msg['players']
+
+    updateBoardLoc(board, players);
+}
+
+function updateBoardLoc(board, players){
+
+    for(let i = 0; i < board.length; i++){
+        if(board[i].length == 0) continue;
+
+        const spot = board[i];
+        const playersAtSpot = spot.length;
+
+        for(let k = 0; k < playersAtSpot; k++){
+            const playerId = spot[k];
+            const cName = getPlayerName(players, playerId);
+
+            const playerBox = document.createElement('div');
+            playerBox.innerText = cName;
+            playerBox.id = `${cName}`;
+
+            const oldLoc = document.getElementById(`${cName}`);
+            if(oldLoc != null){
+                oldLoc.remove();  
+            }
+            const newLoc = document.getElementById(`${i}`);
+            newLoc.append(playerBox);
+        }
+    }
+}
+
+function getPlayerName(players, playerId){
+    for(let i = 0; i < players.length; i++){
+        if(playerId == players[i]['player_id']){
+            return players[i]['character_name']
+        }
+    }
+}
