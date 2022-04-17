@@ -128,7 +128,7 @@ def get_player(game_board_id, player_id):
 
 def __test_mongo():
     global MONGO_DB
-    MONGO_DB = pymongo.MongoClient("mongodb+srv://Heroku:Clue-L3ss_heroku@clue.pg9jj.mongodb.net/clueDB").clueDB
+    MONGO_DB = pymongo.MongoClient("mongodb://localhost:27017/").clueDB
 
 def __insert_a_few_games():
     for i in range(3):
