@@ -36,7 +36,7 @@ def create_game(init = False):
         game_id = random.randint(0, 500)
     CURRENT_GAMES.add(game_id)
     game = {"game_board_id": game_id, 
-            "board": [[] for _ in range(20)],
+            "board": [[] for _ in range(21)],
             "status": "new",
             "players": []}
     get_games_collection().insert_one(game)

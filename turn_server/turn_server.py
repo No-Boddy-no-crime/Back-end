@@ -38,10 +38,10 @@ def joinGame(message):
     char_name = message['character_name'] # gets the player's chosen character
     id = request.sid
     join_room(room_id)
-    print(f"{char_name} Joined Room.")
+    msg = f"{char_name} has joined the game."
     #update the player information in the db with the player's session id.
     db.get_games_collection().find_one_and_update({"game_board_id": room_id, 'players.character_name':char_name}, {"$set" : {"players.$.sid": id}})
-    emit("connect","New Player Joined", to=room_id)
+    emit("connect", msg, to=room_id)
 
 
 @socketio.event
@@ -64,22 +64,23 @@ def gameTurn(message):
     # retrieve the session id of the active player.
     active_player = db.get_games_collection().find_one({"game_board_id": room_id}, 
                                        {"players": {"$elemMatch" : {"character_name": sorted_players[idx]}}})["players"][0]
-
-    try:
-        id = active_player['sid']
-        board = db.get_game(room_id)['board']
-        # Assumes we are updating the db with current position as player attribute.
-        
-        for room in board:
-            for player in room:
-                if player == active_player:
-                    current_position = room
-        #TODO Get player current position. validate move options.
-        options = check_possible_moves(board, current_position)
+    print(f"Active Player: {active_player}")
+    #try:
+    id = active_player['sid']
+    board = db.get_game(room_id)['board']
   
-        emit('gameTurn', {'moves':options}, to=id)
-    except:
-        print(f"Unable to query session id of active player")
+    current_position=None    
+    for index, room in enumerate(board):
+        for player in room:
+            if player == active_player['player_id']:
+                current_position = index
+                
+    options = check_possible_moves(board, current_position)
+    print(options)
+  
+    socketio.emit('gameTurn', {'moves':options}, to=id)
+    # except:
+    #     print(f"Unable to query session id of active player")
     
     
 
@@ -100,7 +101,7 @@ def gameState(message):
         room_id = message  
         game_state = json.loads(json_util.dumps(db.get_game(game_board_id=room_id)))
     try:
-        emit('GameState', game_state, to=room_id)
+        socketio.emit('GameState', game_state, to=room_id)
     except:
         print(f"Attempted to emit game state. No room_id: {room_id}")
     
@@ -136,7 +137,7 @@ def notify_player_to_rebute(game_id, other_player_id, matching_cards):
     id = db.get_games_collection().find_one({"game_board_id": game_id}, 
                                        {"players": {"$elemMatch" : {"player_id": other_player_id}}})["players"][0]['sid']
     msg = {'cards':matching_cards}
-    emit('chooseRebuttalCard', msg, to=id, callback=update_rebuttal)
+    socketio.emit('chooseRebuttalCard', msg, to=id, callback=update_rebuttal)
     socketio.sleep(10)
     if rebuttal is None:
         rebuttal = matching_cards[0]
@@ -145,13 +146,14 @@ def notify_player_to_rebute(game_id, other_player_id, matching_cards):
 def notify_players_no_rebute(game_id, card_set):
     msg = {"msg": "No Player was able to rebute the suggestion", "card_set":card_set}
     try:
-        emit("noRebuttal", msg, to=game_id)
+        socketio.emit("noRebuttal", msg, to=game_id)
     except:
-        print(f"Attempted to broadcase no rebute. No room_id: {game_id}")
+        print(f"Attempted to broadcast no rebute. No room_id: {game_id}")
 
 
 def check_possible_moves(board, position):
-    potential_moves = bc.valid_transitions[bc.room_mapping[position]]
+    print(f"Checking Moves. position: {position}")
+    potential_moves = bc.valid_transitions[position]
     for room in potential_moves:
         if len(board[room]) > 0 and len(bc.valid_transitions[room]) == 2: # Checks if potential move is a hallway that is occupied by another player.
             potential_moves.remove(room)

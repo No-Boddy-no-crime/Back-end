@@ -49,7 +49,7 @@ def start_game_board(game):
     board = game["board"]
     players = game["players"]
     if board is None:
-        board = [[] for _ in range(20)]
+        board = [[] for _ in range(21)]
     print(room_mapping["ballroom_to_kitchen"])
     for player in players:
         if player["character_name"] == "Miss Scarlet":
