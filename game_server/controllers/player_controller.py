@@ -80,10 +80,11 @@ def make_suggestion(game_id, player_id):  # noqa: E501
     players = game["players"]
     # rotate to place the current player at the front (meaning put the list in order form who would be to the "left" of this player)
     # and remove that player
+    player_id = int(player_id)
     rotated_player_list = players[player_id + 1:] + players[:player_id]
 
     for other_player in rotated_player_list:
-        matching_cards =  set(other_player["cards"]).intersection(card_set)
+        matching_cards =  set(other_player["cards"]).intersection([card_set.character_name, card_set.room, card_set.weapon])
         if len(matching_cards) == 0:
             continue
         elif len(matching_cards) == 1:

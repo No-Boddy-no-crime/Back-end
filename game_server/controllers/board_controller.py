@@ -1,4 +1,4 @@
-import turn_server
+import turn_server.turn_server as turn_server
 import game_server.db.database as db
 
 room_mapping = {"study" : 0, 
@@ -93,4 +93,4 @@ def update_game_board_with_move(game, moved_player_id, moved_to_room):
     game["board"] = board
     db.update_game(game["game_board_id"], game)
     # TODO: not a real function yet
-    turn_server.notify_update_game_state(game)
+    turn_server.gameState(game)
