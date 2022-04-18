@@ -33,6 +33,8 @@ $(document).ready(function(){
 
 
     document.getElementById('move_player_button').onclick = function(){ movePlayerUI() };
+    document.getElementById('make_suggestion_button').onclick = function(){ suggestPlayer(); };
+    document.getElementById('make_accusation_button').onclick = function(){ accusePlayer(); };
 });
 
 const startGameBoard = () =>{
@@ -62,7 +64,7 @@ const createPlayer = () => {
                 //TODO: set player
                 player.name = response['character_name'];
                 player.id = response['player_id'];
-                startingPos(player);
+                startingPos(player, true);
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 console.log(xhr.status);
@@ -93,14 +95,21 @@ const createGame = () =>{
    );
 }
 
-const makeAccusation = (payload) => {
+const compileMovePayload = (from, to) => ({
+  "from_room": from,
+  "to_room": to
+})
+
+const movePlayer = (from, to) => {
     $.ajax(
         {
-            url: `/v1/games/${{gameId}}/players/${{playerId}}/accusation`, 
-            data: payload, 
+            url: `/v1/games/${gameId}/player/${player.id}/move`, 
+            data: JSON.stringify(compileMovePayload(from, to)), 
             type: 'POST',
+            contentType: 'application/json',
             success: function(response) { 
-                appendServerResponse2(`Made accusation: ` + JSON.stringify(response))
+                console.log("Moved Player");
+                console.log(JSON.stringify(response));
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 console.log(xhr.status);
@@ -110,14 +119,41 @@ const makeAccusation = (payload) => {
    );
 }
 
-const makeSuggestion = (payload) => {
+const compileAccusePayload = () => ({
+    "character_name": `${document.getElementById('who_select').value}`,
+    "player": {
+        "character_name": `${player.name}`,
+        "player_id": `${player.id}`
+    },
+    "room": `${document.getElementById('where_select').value}`,
+    "weapon": `${document.getElementById('what_select').value}`
+})
+
+const compileSuggestPayload = () => ({
+    "character_name": `${document.getElementById('who_select').value}`,
+    "player": {
+        "character_name": `${player.name}`,
+        "player_id": `${player.id}`
+    },
+    "room": `${document.getElementById('where_select').value}`,
+    "weapon": `${document.getElementById('what_select').value}`
+})
+
+const accusePlayer = () => {
     $.ajax(
         {
-            url: `/v1/games/${{gameId}}/players/${{playerId}}/suggestion`, 
-            data: payload, 
+            url: `/v1/games/${gameId}/player/${player.id}/accusation`, 
+            data: JSON.stringify(compileSuggestPayload()), 
             type: 'POST',
+            contentType: 'application/json',
             success: function(response) { 
-                appendServerResponse2(`Made suggestion: ` + JSON.stringify(response))
+                console.log("Accused Player");
+                console.log(JSON.stringify(response));
+
+                if(JSON.stringify(response) == 'true')
+                    alert('Correct Accusation - Winner');
+                else
+                    alert('Incorrect Accusation - Loser');
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 console.log(xhr.status);
@@ -127,14 +163,17 @@ const makeSuggestion = (payload) => {
    );
 }
 
-const movePlayer = (payload) => {
+const suggestPlayer = () => {
     $.ajax(
         {
-            url: `/v1/games/${{gameId}}/players/${{playerId}}/move`, 
-            data: payload, 
+            url: `/v1/games/${gameId}/player/${player.id}/suggestion`, 
+            data: JSON.stringify(compileAccusePayload()), 
             type: 'POST',
+            contentType: 'application/json',
             success: function(response) { 
-                appendServerResponse2(`Moved player: ` + JSON.stringify(response))
+                console.log("Suggested Player");
+                console.log(JSON.stringify(response));
+                alert(JSON.stringify(response));
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 console.log(xhr.status);
@@ -144,7 +183,39 @@ const movePlayer = (payload) => {
    );
 }
 
-const appendServerResponse2 = (msg) => {
+const getCards = () => {
+    $.ajax(
+        {
+            url: `/v1/games/${gameId}/player/${player.id}`,
+            type: 'GET',
+            contentType: 'application/json',
+            success: function(response) { 
+                console.log("Get Cards");
+                console.log(JSON.stringify(response));
+                displayCards(response['cards'])
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status);
+                console.log(thrownError);
+            }
+        }
+   );
+}
+
+const displayCards = (cardArr) => {
+    const cardCont = document.getElementById('playerCards');
+
+    cardArr.forEach((cardName, index) => {
+        if(document.getElementById((cardName + 'Card')) == null){
+            const card = document.createElement('div');
+            card.id = cardName + 'Card';
+            card.innerText = `${index}: ${cardName}`;
+            cardCont.append(card);
+        }
+    })
+}
+
+const appendServerResponse = (msg) => {
 	if(msg == undefined) return
 	const div = document.createElement('div')
 	div.innerText = msg
@@ -297,7 +368,7 @@ const movePlayerUI = () => {
     const endPos = getEndPosFromMove(move, start);
 
     const playerBox = document.createElement('div');
-    playerBox.innerText = player.name;
+    playerBox.innerText = player.name + '(You)';
     playerBox.id = `${player.name}`;
 
     const oldLoc = document.getElementById(`${player.name}`);
@@ -311,9 +382,12 @@ const movePlayerUI = () => {
     allowableMoves(endPos);
 
     player.pos = endPos;
+
+    //server call
+    movePlayer(start, endPos);
 }
 
-function startingPos(character){
+function startingPos(character, directUser){
     
     //skip over already added people
     const old = document.getElementById(`${character.name}`);
@@ -321,6 +395,11 @@ function startingPos(character){
 
     const playerBox = document.createElement('div');
     playerBox.innerText = character.name;
+
+    if(directUser){
+        playerBox.innerText = playerBox.innerText + ' (You)';
+    }
+
     playerBox.id = `${character.name}`;
 
     let startId = undefined;
@@ -362,7 +441,7 @@ function updatePlayers(playerArr){
     .forEach((otherPlayer) => {
         const character = {};
         character.name = otherPlayer['character_name'] //TODO: fix this garbage
-        startingPos(character)
+        startingPos(character, false)
     });
 }
 
@@ -395,6 +474,12 @@ function updateBoardLoc(board, players){
             }
             const newLoc = document.getElementById(`${i}`);
             newLoc.append(playerBox);
+
+            if(playerId == player.id){
+                allowableMoves(i);
+                player.pos = i;
+                playerBox.innerText = playerBox.innerText + '(You)';
+            }
         }
     }
 }

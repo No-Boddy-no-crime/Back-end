@@ -6,7 +6,7 @@ const MILLISECONDS_IN_A = Object.freeze({SEC: 1000, MIN: 60000, HOUR: 3600000});
 
 /* sockets listening post */
 const initListeners = () => {
-	socket.on('connect', (msg) => console.log(msg))
+	socket.on('connect', (msg) => appendServerResponse(msg))
 	socket.on('gameTurn', (msg) => console.log(msg))
 	socket.on('GameState', (msg) => updateGameState(msg))
 }
@@ -24,7 +24,10 @@ const updateGameState = (msg) => {
 	if(msg == undefined) return
 	if(msg['status'] == 'new') updatePlayers(msg['players']);
 
-	if(msg['status'] == 'in-play') updateBoard(msg);
+	if(msg['status'] == 'in-play'){
+		updateBoard(msg);
+		getCards();
+	}
 }
 
 /* requests to server */
