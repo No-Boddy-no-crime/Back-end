@@ -101,13 +101,13 @@ def make_suggestion(game_id, player_id):  # noqa: E501
     turn_server.notify_players_no_rebute(game_id, card_set)
     return {}
 
-def suggestion_move_player(game, card_set):
-    moved_character = set(card_set).intersection(CULPRIT)
-    moved_to_room = set(card_set).intersection(ROOM)
+def suggestion_move_player(game, card_set: CardSet):
+    moved_character = card_set.character_name
+    moved_to_room = card_set.room
     moved_player_id = None
 
     for player in game["players"]:
-        if player["character"] == moved_character:
+        if player["character_name"] == moved_character:
             moved_player_id = player["player_id"]
             break
     

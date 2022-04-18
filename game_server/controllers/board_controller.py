@@ -48,7 +48,7 @@ valid_transitions = [[1, 5, 20],
 def start_game_board(game):
     board = game["board"]
     players = game["players"]
-    if board is None:
+    if board is None or not board:
         board = [[] for _ in range(21)]
     print(room_mapping["ballroom_to_kitchen"])
     for player in players:
@@ -80,12 +80,16 @@ def update_game_board_with_move(game, moved_player_id, moved_to_room):
     # find where the player was located, and remove them
     for room in board:
         for player in room:
-            if player["player_id"] == moved_player_id:
+            if player == moved_player_id:
                 moved_player = player
                 room.remove(player)
     
     # place the player in the new room
-    board[moved_to_room].append(moved_player)
+    print(moved_to_room, type(moved_to_room))
+    if type(moved_to_room) is str:
+        board[room_mapping[moved_to_room]].append(moved_player)
+    elif type(moved_to_room) is int:
+        board[moved_to_room].append(moved_player)
     game["board"] = board
     db.update_game(game["game_board_id"], game)
     # TODO: not a real function yet
