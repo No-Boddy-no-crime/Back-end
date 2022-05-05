@@ -67,9 +67,11 @@ def gameTurn(message):
     active_player = db.get_games_collection().find_one({"game_board_id": room_id}, 
                                        {"players": {"$elemMatch" : {"character_name": sorted_players[idx]}}})["players"][0]
     print(f"Active Player: {active_player}")
-    #try:
-    id = active_player['sid']
-    board = db.get_game(room_id)['board']
+    try:
+        id = active_player['sid']
+        board = db.get_game(room_id)['board']
+    except KeyError:
+        return
   
     current_position=None    
     for index, room in enumerate(board):
@@ -138,8 +140,11 @@ def notify_player_to_rebute(game_id, other_player_id, matching_cards):
     rebuttal = None
     """Notify player to select a rebuttal card from a list of possible options. Requires client side callback to return selected card.
        If player does not make a choice within 10 seconds, returns first card in matches."""
-    id = db.get_games_collection().find_one({"game_board_id": int(game_id)}, 
-                                       {"players": {"$elemMatch" : {"player_id": int(other_player_id)}}})["players"][0]['sid']
+    try:
+        id = db.get_games_collection().find_one({"game_board_id": int(game_id)}, 
+                                        {"players": {"$elemMatch" : {"player_id": int(other_player_id)}}})["players"][0]['sid']
+    except KeyError:
+        return
     msg = {'cards':matching_cards}
     socketio.emit('chooseRebuttalCard', msg, to=id, callback=update_rebuttal)
     socketio.sleep(10)

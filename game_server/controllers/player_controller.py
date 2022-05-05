@@ -115,7 +115,7 @@ def suggestion_move_player(game, card_set: CardSet):
     board_controller.update_game_board_with_move(game, moved_player_id, moved_to_room)
 
 
-def move_player(game_id, player_id, move):  # noqa: E501
+def move_player(game_id, player_id):  # noqa: E501
     """Create a new player move
 
      # noqa: E501
@@ -131,9 +131,12 @@ def move_player(game_id, player_id, move):  # noqa: E501
     """
     if connexion.request.is_json:
         move = Move.from_dict(connexion.request.get_json())  # noqa: E501
+    print(move.from_room, move.to_room)
+    player_id = int(player_id)
     if board_controller.check_move(move.from_room, move.to_room):
-        board_controller.update_game_board_with_move(player_id)
+        board_controller.update_game_board_with_move(db.get_game(game_id), player_id, move.from_room, move.to_room)
     else:
+        print("illegal move")
         return 'illegal move'
 
 

@@ -50,46 +50,33 @@ def start_game_board(game):
     players = game["players"]
     if board is None or not board:
         board = [[] for _ in range(21)]
-    print(room_mapping["ballroom_to_kitchen"])
+
     for player in players:
-        if player["character_name"] == "Miss Scarlet":
-            board[room_mapping["hall_to_lounge"]].append(player["player_id"])
-        elif player["character_name"] == "Mrs White":
+        if player["character_name"] == "Miss Scarlet" and player["player_id"] not in board[room_mapping["hall_to_lounge"]]:
+                board[room_mapping["hall_to_lounge"]].append(player["player_id"])
+        elif player["character_name"] == "Mrs White" and player["player_id"] not in board[room_mapping["ballroom_to_kitchen"]]:
             board[room_mapping["ballroom_to_kitchen"]].append(player["player_id"])
-        elif player["character_name"] == "Mrs Peacock":
+        elif player["character_name"] == "Mrs Peacock" and player["player_id"] not in board[room_mapping["library_to_conservatory"]]:
             board[room_mapping["library_to_conservatory"]].append(player["player_id"])
-        elif player["character_name"] == "Mr Green":
+        elif player["character_name"] == "Mr Green" and player["player_id"] not in board[room_mapping["conservatory_to_ballroom"]]:
             board[room_mapping["conservatory_to_ballroom"]].append(player["player_id"])
-        elif player["character_name"] == "Professor Plum":
+        elif player["character_name"] == "Professor Plum" and player["player_id"] not in board[room_mapping["study_to_library"]]:
             board[room_mapping["study_to_library"]].append(player["player_id"])
-        elif player["character_name"] == "Colonel Mustard":
+        elif player["character_name"] == "Colonel Mustard" and player["player_id"] not in board[room_mapping["lounge_to_dining"]]:
             board[room_mapping["lounge_to_dining"]].append(player["player_id"])
-        else:
-            board[room_mapping["billard_to_dining"]].append(player["player_id"])
     return board
 
 def check_move(from_room, to_room):
+    print("Checking the move")
     if to_room in valid_transitions[from_room]:
         return True
     return False
 
-def update_game_board_with_move(game, moved_player_id, moved_to_room):
+def update_game_board_with_move(game, moved_player_id, moved_from_room, moved_to_room):
     board = game["board"]
-    moved_player = None
-    
     # find where the player was located, and remove them
-    for room in board:
-        for player in room:
-            if player == moved_player_id:
-                moved_player = player
-                room.remove(player)
-    
-    # place the player in the new room
-    print(moved_to_room, type(moved_to_room))
-    if type(moved_to_room) is str:
-        board[room_mapping[moved_to_room]].append(moved_player)
-    elif type(moved_to_room) is int:
-        board[moved_to_room].append(moved_player)
+    board[moved_from_room].remove(moved_player_id)
+    board[moved_to_room].append(int(moved_player_id))
     game["board"] = board
     db.update_game(game["game_board_id"], game)
     # TODO: not a real function yet
