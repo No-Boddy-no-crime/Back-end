@@ -122,7 +122,8 @@ def suggestion_move_player(game, card_set: CardSet):
             break
     print(room_number, room)
 
-    board_controller.update_game_board_with_move(game, moved_player_id, moved_from_room, moved_to_room)
+    if moved_player_id is not None:
+        board_controller.update_game_board_with_move(game, moved_player_id, moved_from_room, moved_to_room)
 
 
 def move_player(game_id, player_id):  # noqa: E501
