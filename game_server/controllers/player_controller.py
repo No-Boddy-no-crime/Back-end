@@ -109,10 +109,20 @@ def suggestion_move_player(game, card_set: CardSet):
 
     for player in game["players"]:
         if player["character_name"] == moved_character:
-            moved_player_id = player["player_id"]
+            moved_player_id = int(player["player_id"])
             break
     
-    board_controller.update_game_board_with_move(game, moved_player_id, moved_to_room)
+    board = game["board"]
+    moved_from_room = None
+    
+    # find the player's current location
+    for room_number, room in enumerate(board):
+        if moved_player_id in room:
+            moved_from_room = room_number
+            break
+    print(room_number, room)
+
+    board_controller.update_game_board_with_move(game, moved_player_id, moved_from_room, moved_to_room)
 
 
 def move_player(game_id, player_id):  # noqa: E501
@@ -131,7 +141,6 @@ def move_player(game_id, player_id):  # noqa: E501
     """
     if connexion.request.is_json:
         move = Move.from_dict(connexion.request.get_json())  # noqa: E501
-    print(move.from_room, move.to_room)
     player_id = int(player_id)
     if board_controller.check_move(move.from_room, move.to_room):
         board_controller.update_game_board_with_move(db.get_game(game_id), player_id, move.from_room, move.to_room)

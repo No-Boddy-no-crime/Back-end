@@ -74,6 +74,10 @@ def check_move(from_room, to_room):
 
 def update_game_board_with_move(game, moved_player_id, moved_from_room, moved_to_room):
     board = game["board"]
+
+    if type(moved_to_room) is str:
+        moved_to_room = room_mapping[moved_to_room]
+
     # find where the player was located, and remove them
     board[moved_from_room].remove(moved_player_id)
     board[moved_to_room].append(int(moved_player_id))
