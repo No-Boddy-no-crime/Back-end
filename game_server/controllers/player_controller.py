@@ -90,7 +90,7 @@ def make_suggestion(game_id, player_id):  # noqa: E501
         elif len(matching_cards) == 1:
             # TODO: not a real function yet
             turn_server.notify_players_of_rebutall(game_id, other_player["player_id"])
-            rebuttal = {"player_id": other_player["player_id"], "rebuttal_card": matching_cards.pop()}
+            rebuttal = {"player":{"player_id": other_player["player_id"], "character_name": other_player["character_name"]}, "card": matching_cards.pop()}
             return rebuttal
         else:
             # TODO: not a real function yet
