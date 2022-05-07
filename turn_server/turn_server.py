@@ -183,6 +183,17 @@ def false_accusation(game_id, player_id, card_set):
     msg = f'{character} has made a false accusation: {card_set.character_name}, {card_set.room}, {card_set.weapon}'
     
     socketio.emit('falseAccusation', msg)
+
+
+
+def false_accusation(game_id, player_id, card_set):
+    character = db.get_games_collection().find_one({"game_board_id": int(game_id)}, 
+                                       {"players": {"$elemMatch" : {"player_id": int(player_id)}}})["players"][0]['character_name']
+
+    msg = f'{character} has made a false accusation: {card_set.character_name}, {card_set.room}, {card_set.weapon}'
+    socketio.emit('falseAccusation', msg)
+
+
 def check_possible_moves(board, position):
     print(f"Checking Moves. position: {position}")
     potential_moves = bc.valid_transitions[position]
