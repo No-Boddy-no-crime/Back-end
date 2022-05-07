@@ -145,12 +145,16 @@ def notify_player_to_rebute(game_id, other_player_id, matching_cards):
                                         {"players": {"$elemMatch" : {"player_id": int(other_player_id)}}})["players"][0]['sid']
     except KeyError:
         return
+    character = db.get_games_collection().find_one({"game_board_id": int(game_id)}, 
+                                       {"players": {"$elemMatch" : {"player_id": int(other_player_id)}}})["players"][0]['character_name']
     msg = {'cards':matching_cards}
+    print(matching_cards)
     socketio.emit('chooseRebuttalCard', msg, to=id, callback=update_rebuttal)
     socketio.sleep(20)
     if rebuttal is None:
         rebuttal = matching_cards[0]
-    return rebuttal
+         
+    return {"player":{"player_id": other_player_id, "character_name": character}, "card": rebuttal}
 
 def notify_players_no_rebute(game_id, card_set):
     msg = {"msg": "No Player was able to rebute the suggestion", "card_set":card_set}
