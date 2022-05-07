@@ -24,8 +24,8 @@ const initListeners = () => {
 	})
 	socket.on('chooseRebuttalCard', (msg, cb) => {
 		console.log('chooseRebuttalCard'); 
-		ret = chooseRebuttal(msg['cards'])
-		cb(ret);
+		chooseRebuttal(msg['cards'])
+		setTimeout( () => { cb(cleanUpCb()); }, 11000);
 		
 	})
 	socket.on('rebuttal', (msg) => {

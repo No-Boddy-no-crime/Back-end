@@ -508,9 +508,11 @@ async function chooseRebuttal(arr){
             text: `${arr[i]}`
         }));
     }
-    await new Promise(r => setTimeout(r, 10000));
+}
+
+function cleanUpCb(){
     document.getElementById('chooseRebutDiv').innerText = 'No card to rebut';
-    const ret = Promise.resolve($('#rebutDropDown').val())
+    const ret = $('#rebutDropDown').val();
     $('#rebutDropDown').empty()
     return ret;
 }
