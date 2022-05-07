@@ -54,6 +54,7 @@ def make_accusation(game_id, player_id):  # noqa: E501
         return True
     # this is a positional update
     db.update_player(game_id, player_id, {"players.$.status": "post-accusation"})
+    turn_server.false_accusation(game_id, player_id, card_set)
     return False
 
 

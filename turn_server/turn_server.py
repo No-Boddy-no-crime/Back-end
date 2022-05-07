@@ -153,11 +153,12 @@ def notify_player_to_rebute(game_id, other_player_id, matching_cards):
     socketio.emit('chooseRebuttalCard', msg, to=id, callback=update_rebuttal)
     socketio.sleep(20)
     if rebuttal is None:
+
         rebuttal = matching_cards[0]
     print(f"REBUTTAL ++++++++++++++++++++++ {rebuttal}")
     msg = (f'{character} rebutted with {rebuttal}')
     socketio.emit('rebuttal', msg)
-    return {"player":{"player_id": other_player_id, "character_name": character}, "card": rebuttal}
+
 
 def notify_players_no_rebute(game_id, card_set):
     print('-------- NO REBUTTAL ---------')
@@ -175,7 +176,13 @@ def notify_players_no_rebute(game_id, card_set):
     except:
         print(f"Attempted to notify all players of rebuttal. No room_id: {game_id}")
 
+def false_accusation(game_id, player_id, card_set):
+    character = db.get_games_collection().find_one({"game_board_id": int(game_id)}, 
+                                       {"players": {"$elemMatch" : {"player_id": int(player_id)}}})["players"][0]['character_name']
 
+    msg = f'{character} has made a false accusation: {card_set.character_name}, {card_set.room}, {card_set.weapon}'
+    
+    socketio.emit('falseAccusation', msg)
 def check_possible_moves(board, position):
     print(f"Checking Moves. position: {position}")
     potential_moves = bc.valid_transitions[position]
