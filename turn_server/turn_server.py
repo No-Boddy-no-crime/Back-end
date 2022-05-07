@@ -116,8 +116,9 @@ def notify_players_of_winner(game_id, player_id):
                                        {"players": {"$elemMatch" : {"player_id": int(player_id)}}})['players'][0]['character_name']
     print(f"Notifying Room: {game_id} that {character} has won the Game.")
     msg = f"{character} has won the game!!!"
+
     try:
-        socketio.emit('gameOver', msg, to=game_id)
+        socketio.emit('GameOver', msg)
     except:
         print(f"Attempted to notify players of game over. No room_id: {game_id}")
 
@@ -129,7 +130,7 @@ def notify_players_of_rebutall(game_id, other_player_id):
     print(f"Notifying Room: {game_id} that {character} has made a rebuttal.")
     msg = f"{character} has made a rebuttal."
     try:
-        socketio.emit('rebuttal', msg, to=game_id)
+        socketio.emit('rebuttal', msg)
     except:
         print(f"Attempted to notify all players of rebuttal. No room_id: {game_id}")
 
@@ -157,11 +158,13 @@ def notify_player_to_rebute(game_id, other_player_id, matching_cards):
     return {"player":{"player_id": other_player_id, "character_name": character}, "card": rebuttal}
 
 def notify_players_no_rebute(game_id, card_set):
-    msg = {"msg": "No Player was able to rebute the suggestion", "card_set":card_set}
+    print('-------- NO REBUTTAL ---------')
+    #msg = {"msg": "No Player was able to rebute the suggestion", "card_set":card_set}
+    #msg = (f"No player could rebute {player}: {character}, {room}, {weapon}")
     try:
-        socketio.emit("noRebuttal", msg, to=game_id)
+        socketio.emit('noRebuttal', "No player could rebute the card_set")
     except:
-        print(f"Attempted to broadcast no rebute. No room_id: {game_id}")
+        print(f"Attempted to notify all players of rebuttal. No room_id: {game_id}")
 
 
 def check_possible_moves(board, position):
@@ -178,6 +181,5 @@ def is_active_player(player_id):
 
 
 def update_rebuttal(card):
-    print("CALLBACK WAS CALLED==============================================")
     global rebuttal
     rebuttal = card

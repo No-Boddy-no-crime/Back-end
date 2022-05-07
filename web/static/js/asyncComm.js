@@ -20,7 +20,7 @@ const initListeners = () => {
 	})
 	socket.on('noRebuttal', (msg) => {
 		console.log('No Rebuttal'); 
-		console.log(msg);
+		appendServerResponse(msg);
 	})
 	socket.on('chooseRebuttalCard', (msg, cb) => {
 		console.log('chooseRebuttalCard'); 
@@ -30,11 +30,11 @@ const initListeners = () => {
 	})
 	socket.on('rebuttal', (msg) => {
 		console.log('rebuttal'); 
-		console.log(msg);
+		appendServerResponse(msg);
 	})
-	socket.on('gameOver', (msg) => {
-		console.log('gameOver'); 
-		console.log(msg);
+	socket.on('GameOver', (msg) => {
+		console.log('GameOver'); 
+		appendServerResponse(msg);
 	})
 }
 
