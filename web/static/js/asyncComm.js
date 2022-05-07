@@ -32,6 +32,10 @@ const initListeners = () => {
 		console.log('rebuttal'); 
 		appendServerResponse(msg);
 	})
+	socket.on('rebuttalAll', (msg) => {
+		console.log('rebuttal'); 
+		appendServerResponse(msg);
+	})
 	socket.on('GameOver', (msg) => {
 		console.log('GameOver'); 
 		appendServerResponse(msg);

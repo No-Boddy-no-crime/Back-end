@@ -130,7 +130,7 @@ def notify_players_of_rebutall(game_id, other_player_id):
     print(f"Notifying Room: {game_id} that {character} has made a rebuttal.")
     msg = f"{character} has made a rebuttal."
     try:
-        socketio.emit('rebuttal', msg)
+        socketio.emit('rebuttalAll', msg)
     except:
         print(f"Attempted to notify all players of rebuttal. No room_id: {game_id}")
 
@@ -156,7 +156,7 @@ def notify_player_to_rebute(game_id, other_player_id, matching_cards):
 
         rebuttal = matching_cards[0]
     print(f"REBUTTAL ++++++++++++++++++++++ {rebuttal}")
-    msg = (f'{character} has made a rebuttal')
+    msg = (f'{character} rebutted with {rebuttal}')
     socketio.emit('rebuttal', msg)
 
 
