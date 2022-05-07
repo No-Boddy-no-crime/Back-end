@@ -40,7 +40,7 @@
     <table class="page-container">
         <tr>
             <td style="width: 85%;">
-                <table id="gameBoard" style="table-layout: fixed; width: 100%;">
+                <table id="gameBoard" style="table-layout: fixed; width: 100%; border-collapse: collapse">
                     <tr>
                         <td class="outerBlockStyle"></td>
                         <td class="outerBlockStyle"></td>
@@ -52,47 +52,48 @@
                     </tr>
                     <tr>
                         <td class="outerBlockStyle"></td>
-                        <td id="0" class="roomStyle">Study</td>
-                        <td id="1" class="hallwayStyle">hallway</td>
-                        <td id="2" class="roomStyle">Hall</td>
-                        <td id="3" class="hallwayStyle">hallway</td>
-                        <td id="4" class="roomStyle">Lounge</td>
+                        <td id="0" class="roomStyle studyRoomStyle">Study</td>
+                        <td id="1" class="horizontalHallwayStyle"></td>
+                        <td id="2" class="roomStyle hallRoomStyle">Hall</td>
+                        <td id="3" class="horizontalHallwayStyle"></td>
+                        <td id="4" class="roomStyle loungeRoomStyle">Lounge</td>
                         <td class="outerBlockStyle"></td>
                     </tr>
                     <tr>
                         <td id="plumS" class="outerBlockStyle"></td>
-                        <td id="5" class="hallwayStyle">hallway</td>
+                        <td id="5" class="verticalHallwayStyle"></td>
                         <td class="outerBlockStyle"></td>
-                        <td id="6" class="hallwayStyle">hallway</td>
+                        <td id="6" class="verticalHallwayStyle"></td>
                         <td class="outerBlockStyle"></td>
-                        <td id="7" class="hallwayStyle">hallway</td>
+                        <td id="7" class="verticalHallwayStyle"></td>
                         <td id="mS" class="outerBlockStyle"></td>
                     </tr>
                     <tr>
                         <td class="outerBlockStyle"></td>
-                        <td id="8" class="roomStyle">Library</td>
-                        <td id="9" class="hallwayStyle">hallway</td>
-                        <td id="10" class="roomStyle">Billard Room</td>
-                        <td id="11" class="hallwayStyle">hallway</td>
-                        <td id="12" class="roomStyle">Dining Room</td>
+                        <td id="8" class="roomStyle libraryRoomStyle">Library</td>
+                        <td id="9" class="horizontalHallwayStyle"></td>
+                        <td id="10" class="roomStyle billiardRoomStyle">Billiard Room</td>
+                        <td id="11" class="horizontalHallwayStyle"></td>
+                        <td id="12" class="roomStyle diningRoomStyle">Dining Room</td>
+
                         <td class="outerBlockStyle"></td>
                     </tr>
                     <tr>
                         <td id="peaS" class="outerBlockStyle"></td>
-                        <td id="13" class="hallwayStyle">hallway</td>
+                        <td id="13" class="verticalHallwayStyle"></td>
                         <td class="outerBlockStyle"></td>
-                        <td id="14" class="hallwayStyle">hallway</td>
+                        <td id="14" class="verticalHallwayStyle"></td>
                         <td class="outerBlockStyle"></td>
-                        <td id="15" class="hallwayStyle">hallway</td>
+                        <td id="15" class="verticalHallwayStyle"></td>
                         <td class="outerBlockStyle"></td>
                     </tr>
                     <tr>
                         <td class="outerBlockStyle"></td>
-                        <td id="16" class="roomStyle">Conservatory</td>
-                        <td id="17" class="hallwayStyle">hallway</td>
-                        <td id="18" class="roomStyle">Ballroom</td>
-                        <td id="19" class="hallwayStyle">hallway</td>
-                        <td id="20" class="roomStyle">Kitchen</td>
+                        <td id="16" class="roomStyle conservatoryRoomStyle">Conservatory</td>
+                        <td id="17" class="horizontalHallwayStyle"></td>
+                        <td id="18" class="roomStyle ballroomRoomStyle">Ballroom</td>
+                        <td id="19" class="horizontalHallwayStyle"></td>
+                        <td id="20" class="roomStyle kitchenRoomStyle">Kitchen</td>
                         <td class="outerBlockStyle"></td>
                     </tr>
                     <tr>
@@ -164,7 +165,7 @@
                     <select name="what_select" id="what_select">
                         <option>--What--</option>
                         <option>revolver</option>
-                        <option>knife</option>
+                        <option>dagger</option>
                         <option>lead pipe</option>
                         <option>rope</option>
                         <option>candlestick</option>
@@ -189,7 +190,9 @@
                 </div>
             </td>
             <td style="width: 50%; border: solid 2px">
-                <div id="playerCards">Player Cards</div>
+                <table id="playerCards">
+                    <td></td>
+                </table>
             </td>
         </tr>
         <tr>
