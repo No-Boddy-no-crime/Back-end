@@ -414,12 +414,12 @@ function startingPos(character, directUser){
 
     if(directUser){
         playerBox.innerText = '(You)';
-
-        var img = new Image();
-        img.src = "../../static/assets/player_pieces/" + `${character.name}` + ".png"
-        img.width = 75;
-        playerBox.appendChild(img);
     }
+
+    var img = new Image();
+    img.src = "../../static/assets/player_pieces/" + `${character.name}` + ".png"
+    img.width = 75;
+    playerBox.appendChild(img);
 
     playerBox.id = `${character.name}`;
 
@@ -500,12 +500,12 @@ function updateBoardLoc(board, players){
                 player.pos = i;
                 
                 playerBox.innerText = '(You)';
-
-                var img = new Image();
-                img.src = "../../static/assets/player_pieces/" + `${cName}` + ".png"
-                img.width = 75;
-                playerBox.appendChild(img);
             }
+
+            var img = new Image();
+            img.src = "../../static/assets/player_pieces/" + `${cName}` + ".png"
+            img.width = 75;
+            playerBox.appendChild(img);
         }
     }
 }
