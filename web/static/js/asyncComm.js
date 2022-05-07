@@ -36,6 +36,10 @@ const initListeners = () => {
 		console.log('GameOver'); 
 		appendServerResponse(msg);
 	})
+	socket.on('falseAccusation', (msg) => {
+		console.log('GameOver'); 
+		appendServerResponse(msg);
+	})
 }
 
 /* query server periodically */
