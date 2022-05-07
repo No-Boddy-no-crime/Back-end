@@ -16,6 +16,10 @@ const compilePlayerGuessPayload = () => {
     character_name: document.getElementById('who_select').value;
     weapon: document.getElementById('what_select').value;
     room: document.getElementById('where_select').value;
+    player:{
+        character_name: player.name,
+        player_id: player.id
+    }
 }
 
 const compilePlayerMovementPayload = () => {move: document.getElementById('move_player_select').value}
