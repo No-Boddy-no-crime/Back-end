@@ -159,10 +159,17 @@ def notify_player_to_rebute(game_id, other_player_id, matching_cards):
 
 def notify_players_no_rebute(game_id, card_set):
     print('-------- NO REBUTTAL ---------')
+    playerModel = card_set.player
+    playerName = playerModel.character_name
+    character = card_set.character_name
+    weapon = card_set.weapon
+    room = card_set.room
+    msg = (f"No player could rebute {playerName}: {character}, {room}, {weapon}")
+    print(msg)
     #msg = {"msg": "No Player was able to rebute the suggestion", "card_set":card_set}
     #msg = (f"No player could rebute {player}: {character}, {room}, {weapon}")
     try:
-        socketio.emit('noRebuttal', "No player could rebute the card_set")
+        socketio.emit('noRebuttal', msg)
     except:
         print(f"Attempted to notify all players of rebuttal. No room_id: {game_id}")
 
