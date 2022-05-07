@@ -208,13 +208,13 @@ const getCards = () => {
 }
 
 const displayCards = (cardArr) => {
-    const cardTable = document.getElementById('playerCards').rows[0];
-    //cardTable.deleteRow();
-    //const cardCont = cardTable.inserRow();
+    const cardTable = document.getElementById('playerCards');
+    cardTable.deleteRow(0);
+    const cardRow = cardTable.insertRow(0);
 
     cardArr.forEach((cardName, index) => {
         if(document.getElementById((cardName + 'Card')) == null){
-            const cardCell = cardTable.insertCell(-1);
+            const cardCell = cardRow.insertCell(-1);
             const card = document.createElement('div')
 
             card.id = cardName + 'Card';
@@ -416,12 +416,12 @@ function startingPos(character, directUser){
 
     if(directUser){
         playerBox.innerText = '(You)';
-    }
 
-    var img = new Image();
-    img.src = "../../static/assets/player_pieces/" + `${character.name}` + ".png"
-    img.width = 75;
-    playerBox.appendChild(img);
+        var img = new Image();
+        img.src = "../../static/assets/player_pieces/" + `${character.name}` + ".png"
+        img.width = 75;
+        playerBox.appendChild(img);
+    }
 
     playerBox.id = `${character.name}`;
 
@@ -502,12 +502,12 @@ function updateBoardLoc(board, players){
                 player.pos = i;
                 
                 playerBox.innerText = '(You)';
-            }
 
-            var img = new Image();
-            img.src = "../../static/assets/player_pieces/" + `${cName}` + ".png"
-            img.width = 75;
-            playerBox.appendChild(img);
+                var img = new Image();
+                img.src = "../../static/assets/player_pieces/" + `${cName}` + ".png"
+                img.width = 75;
+                playerBox.appendChild(img);
+            }
         }
     }
 }
