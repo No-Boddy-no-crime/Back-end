@@ -380,8 +380,6 @@ const movePlayerUI = () => {
     const endPos = getEndPosFromMove(move, start);
 
     const playerBox = document.createElement('div');
-    //playerBox.style.zIndex = 5;
-    //playerBox.style.alignContent = center;
 
     var img = new Image();
     img.src = "../../static/assets/player_pieces/" + `${player.name}` + ".png"
