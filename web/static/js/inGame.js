@@ -507,5 +507,5 @@ async function chooseRebuttal(arr){
     document.getElementById('chooseRebutDiv').innerText = 'No card to rebut';
     const ret = $('#rebutDropDown').val()
     $('#rebutDropDown').empty()
-    return ret;
+    return {card: ret};
 }
