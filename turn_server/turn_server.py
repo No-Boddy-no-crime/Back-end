@@ -156,7 +156,7 @@ def notify_player_to_rebute(game_id, other_player_id, matching_cards):
 
         rebuttal = matching_cards[0]
     print(f"REBUTTAL ++++++++++++++++++++++ {rebuttal}")
-    msg = (f'{character} rebutted with {rebuttal}')
+    msg = (f'{character} has made a rebuttal')
     socketio.emit('rebuttal', msg)
 
 
