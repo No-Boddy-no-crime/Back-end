@@ -22,9 +22,11 @@ const initListeners = () => {
 		console.log('No Rebuttal'); 
 		console.log(msg);
 	})
-	socket.on('chooseRebuttalCard', (msg) => {
+	socket.on('chooseRebuttalCard', (msg, cb) => {
 		console.log('chooseRebuttalCard'); 
-		chooseRebuttal(msg['cards']);
+		ret = chooseRebuttal(msg['cards'])
+		cb(ret);
+		
 	})
 	socket.on('rebuttal', (msg) => {
 		console.log('rebuttal'); 

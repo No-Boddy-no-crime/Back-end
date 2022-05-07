@@ -153,7 +153,7 @@ def notify_player_to_rebute(game_id, other_player_id, matching_cards):
     socketio.sleep(20)
     if rebuttal is None:
         rebuttal = matching_cards[0]
-         
+    print(f"REBUTTAL ++++++++++++++++++++++ {rebuttal}")     
     return {"player":{"player_id": other_player_id, "character_name": character}, "card": rebuttal}
 
 def notify_players_no_rebute(game_id, card_set):
@@ -178,5 +178,6 @@ def is_active_player(player_id):
 
 
 def update_rebuttal(card):
+    print("CALLBACK WAS CALLED==============================================")
     global rebuttal
     rebuttal = card
