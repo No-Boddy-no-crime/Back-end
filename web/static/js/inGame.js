@@ -174,7 +174,12 @@ const suggestPlayer = () => {
                 console.log("Suggested Player");
                 console.log(JSON.stringify(response));
                 //alert(JSON.stringify(response))
-                appendServerResponse(`${response["player"]["character_name"]} rebutted with ${response["card"]}`)
+                if(Object.keys(response).length === 0){
+                    appendServerResponse("No rebuttal");
+                } else{
+                    appendServerResponse(`${response["player"]["character_name"]} rebutted with ${response["card"]}`)
+                }
+                
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 console.log(xhr.status);
@@ -505,7 +510,7 @@ async function chooseRebuttal(arr){
     }
     await new Promise(r => setTimeout(r, 10000));
     document.getElementById('chooseRebutDiv').innerText = 'No card to rebut';
-    const ret = $('#rebutDropDown').val()
+    const ret = Promise.resolve($('#rebutDropDown').val())
     $('#rebutDropDown').empty()
-    return {card: ret};
+    return ret;
 }
