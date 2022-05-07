@@ -13,7 +13,7 @@ var player = { id: undefined, name: undefined, pos: undefined };
  * this will be the only jquery used; only vanilla from here 
  */
 $(document).ready(function(){
-    socket = io()
+    socket = io();
 
 	if(gameId == 0 && startGame == true ){
         console.log('creating game')
@@ -179,7 +179,6 @@ const suggestPlayer = () => {
                 } else{
                     appendServerResponse(`${response["player"]["character_name"]} rebutted with ${response["card"]}`)
                 }
-
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 console.log(xhr.status);
@@ -531,9 +530,11 @@ async function chooseRebuttal(arr){
             text: `${arr[i]}`
         }));
     }
-    await new Promise(r => setTimeout(r, 10000));
+}
+
+function cleanUpCb(){
     document.getElementById('chooseRebutDiv').innerText = 'No card to rebut';
-    const ret = Promise.resolve($('#rebutDropDown').val())
+    const ret = $('#rebutDropDown').val();
     $('#rebutDropDown').empty()
     return ret;
 }
