@@ -37,7 +37,7 @@ const initListeners = () => {
 		appendServerResponse(msg);
 	})
 	socket.on('falseAccusation', (msg) => {
-		console.log('GameOver'); 
+		console.log('falseAccusation'); 
 		appendServerResponse(msg);
 	})
 }
