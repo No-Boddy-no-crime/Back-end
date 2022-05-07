@@ -67,9 +67,11 @@ def gameTurn(message):
     active_player = db.get_games_collection().find_one({"game_board_id": room_id}, 
                                        {"players": {"$elemMatch" : {"character_name": sorted_players[idx]}}})["players"][0]
     print(f"Active Player: {active_player}")
-    #try:
-    id = active_player['sid']
-    board = db.get_game(room_id)['board']
+    try:
+        id = active_player['sid']
+        board = db.get_game(room_id)['board']
+    except KeyError:
+        return
   
     current_position=None    
     for index, room in enumerate(board):
@@ -114,8 +116,9 @@ def notify_players_of_winner(game_id, player_id):
                                        {"players": {"$elemMatch" : {"player_id": int(player_id)}}})['players'][0]['character_name']
     print(f"Notifying Room: {game_id} that {character} has won the Game.")
     msg = f"{character} has won the game!!!"
+
     try:
-        socketio.emit('gameOver', msg, to=game_id)
+        socketio.emit('GameOver', msg)
     except:
         print(f"Attempted to notify players of game over. No room_id: {game_id}")
 
@@ -127,7 +130,7 @@ def notify_players_of_rebutall(game_id, other_player_id):
     print(f"Notifying Room: {game_id} that {character} has made a rebuttal.")
     msg = f"{character} has made a rebuttal."
     try:
-        socketio.emit('rebuttal', msg, to=game_id)
+        socketio.emit('rebuttal', msg)
     except:
         print(f"Attempted to notify all players of rebuttal. No room_id: {game_id}")
 
@@ -138,21 +141,57 @@ def notify_player_to_rebute(game_id, other_player_id, matching_cards):
     rebuttal = None
     """Notify player to select a rebuttal card from a list of possible options. Requires client side callback to return selected card.
        If player does not make a choice within 10 seconds, returns first card in matches."""
-    id = db.get_games_collection().find_one({"game_board_id": int(game_id)}, 
-                                       {"players": {"$elemMatch" : {"player_id": int(other_player_id)}}})["players"][0]['sid']
+    try:
+        id = db.get_games_collection().find_one({"game_board_id": int(game_id)}, 
+                                        {"players": {"$elemMatch" : {"player_id": int(other_player_id)}}})["players"][0]['sid']
+    except KeyError:
+        return
+    character = db.get_games_collection().find_one({"game_board_id": int(game_id)}, 
+                                       {"players": {"$elemMatch" : {"player_id": int(other_player_id)}}})["players"][0]['character_name']
     msg = {'cards':matching_cards}
+    print(matching_cards)
     socketio.emit('chooseRebuttalCard', msg, to=id, callback=update_rebuttal)
-    socketio.sleep(10)
+    socketio.sleep(20)
     if rebuttal is None:
+
         rebuttal = matching_cards[0]
-    return rebuttal
+    print(f"REBUTTAL ++++++++++++++++++++++ {rebuttal}")
+    msg = (f'{character} rebutted with {rebuttal}')
+    socketio.emit('rebuttal', msg)
+
 
 def notify_players_no_rebute(game_id, card_set):
-    msg = {"msg": "No Player was able to rebute the suggestion", "card_set":card_set}
+    print('-------- NO REBUTTAL ---------')
+    playerModel = card_set.player
+    playerName = playerModel.character_name
+    character = card_set.character_name
+    weapon = card_set.weapon
+    room = card_set.room
+    msg = (f"No player could rebute {playerName}: {character}, {room}, {weapon}")
+    print(msg)
+    #msg = {"msg": "No Player was able to rebute the suggestion", "card_set":card_set}
+    #msg = (f"No player could rebute {player}: {character}, {room}, {weapon}")
     try:
-        socketio.emit("noRebuttal", msg, to=game_id)
+        socketio.emit('noRebuttal', msg)
     except:
-        print(f"Attempted to broadcast no rebute. No room_id: {game_id}")
+        print(f"Attempted to notify all players of rebuttal. No room_id: {game_id}")
+
+def false_accusation(game_id, player_id, card_set):
+    character = db.get_games_collection().find_one({"game_board_id": int(game_id)}, 
+                                       {"players": {"$elemMatch" : {"player_id": int(player_id)}}})["players"][0]['character_name']
+
+    msg = f'{character} has made a false accusation: {card_set.character_name}, {card_set.room}, {card_set.weapon}'
+    
+    socketio.emit('falseAccusation', msg)
+
+
+
+def false_accusation(game_id, player_id, card_set):
+    character = db.get_games_collection().find_one({"game_board_id": int(game_id)}, 
+                                       {"players": {"$elemMatch" : {"player_id": int(player_id)}}})["players"][0]['character_name']
+
+    msg = f'{character} has made a false accusation: {card_set.character_name}, {card_set.room}, {card_set.weapon}'
+    socketio.emit('falseAccusation', msg)
 
 
 def check_possible_moves(board, position):

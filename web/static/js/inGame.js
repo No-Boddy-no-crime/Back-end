@@ -13,7 +13,7 @@ var player = { id: undefined, name: undefined, pos: undefined };
  * this will be the only jquery used; only vanilla from here 
  */
 $(document).ready(function(){
-    socket = io()
+    socket = io();
 
 	if(gameId == 0 && startGame == true ){
         console.log('creating game')
@@ -173,7 +173,12 @@ const suggestPlayer = () => {
             success: function(response) { 
                 console.log("Suggested Player");
                 console.log(JSON.stringify(response));
-                alert(JSON.stringify(response));
+                //alert(JSON.stringify(response))
+                if(Object.keys(response).length === 0){
+                    appendServerResponse("No rebuttal");
+                } else{
+                    appendServerResponse(`${response["player"]["character_name"]} rebutted with ${response["card"]}`)
+                }
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 console.log(xhr.status);
@@ -203,14 +208,21 @@ const getCards = () => {
 }
 
 const displayCards = (cardArr) => {
-    const cardCont = document.getElementById('playerCards');
+    const cardTable = document.getElementById('playerCards');
+    cardTable.deleteRow(0);
+    const cardRow = cardTable.insertRow(0);
 
     cardArr.forEach((cardName, index) => {
         if(document.getElementById((cardName + 'Card')) == null){
-            const card = document.createElement('div');
+            const cardCell = cardRow.insertCell(-1);
+            const card = document.createElement('div')
+
             card.id = cardName + 'Card';
-            card.innerText = `${index}: ${cardName}`;
-            cardCont.append(card);
+
+            var img = new Image();
+            img.src = "../../static/assets/cards/card_" + cardName + ".png"
+            img.width = 120;
+            cardCell.appendChild(img);
         }
     })
 }
@@ -368,7 +380,12 @@ const movePlayerUI = () => {
     const endPos = getEndPosFromMove(move, start);
 
     const playerBox = document.createElement('div');
-    playerBox.innerText = player.name + '(You)';
+
+    var img = new Image();
+    img.src = "../../static/assets/player_pieces/" + `${player.name}` + ".png"
+    img.width = 75;
+    playerBox.appendChild(img);
+
     playerBox.id = `${player.name}`;
 
     const oldLoc = document.getElementById(`${player.name}`);
@@ -394,11 +411,15 @@ function startingPos(character, directUser){
     if(old != undefined) return;
 
     const playerBox = document.createElement('div');
-    playerBox.innerText = character.name;
 
     if(directUser){
-        playerBox.innerText = playerBox.innerText + ' (You)';
+        playerBox.innerText = '(You)';
     }
+
+    var img = new Image();
+    img.src = "../../static/assets/player_pieces/" + `${character.name}` + ".png"
+    img.width = 75;
+    playerBox.appendChild(img);
 
     playerBox.id = `${character.name}`;
 
@@ -465,7 +486,6 @@ function updateBoardLoc(board, players){
             const cName = getPlayerName(players, playerId);
 
             const playerBox = document.createElement('div');
-            playerBox.innerText = cName;
             playerBox.id = `${cName}`;
 
             const oldLoc = document.getElementById(`${cName}`);
@@ -478,8 +498,14 @@ function updateBoardLoc(board, players){
             if(playerId == player.id){
                 allowableMoves(i);
                 player.pos = i;
-                playerBox.innerText = playerBox.innerText + '(You)';
+                
+                playerBox.innerText = '(You)';
             }
+
+            var img = new Image();
+            img.src = "../../static/assets/player_pieces/" + `${cName}` + ".png"
+            img.width = 75;
+            playerBox.appendChild(img);
         }
     }
 }
@@ -490,4 +516,23 @@ function getPlayerName(players, playerId){
             return players[i]['character_name']
         }
     }
+}
+
+async function chooseRebuttal(arr){
+
+    document.getElementById('chooseRebutDiv').innerText = 'Choose a card to rebut with';
+
+    for(let i = 0; i < arr.length; i++){
+        $('#rebutDropDown').append($('<option>', {
+            value: `${arr[i]}`,
+            text: `${arr[i]}`
+        }));
+    }
+}
+
+function cleanUpCb(){
+    document.getElementById('chooseRebutDiv').innerText = 'No card to rebut';
+    const ret = $('#rebutDropDown').val();
+    $('#rebutDropDown').empty()
+    return ret;
 }

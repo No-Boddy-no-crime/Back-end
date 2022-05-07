@@ -54,6 +54,7 @@ def make_accusation(game_id, player_id):  # noqa: E501
         return True
     # this is a positional update
     db.update_player(game_id, player_id, {"players.$.status": "post-accusation"})
+    turn_server.false_accusation(game_id, player_id, card_set)
     return False
 
 
@@ -80,16 +81,17 @@ def make_suggestion(game_id, player_id):  # noqa: E501
     players = game["players"]
     # rotate to place the current player at the front (meaning put the list in order form who would be to the "left" of this player)
     # and remove that player
+    player_id = int(player_id)
     rotated_player_list = players[player_id + 1:] + players[:player_id]
 
     for other_player in rotated_player_list:
-        matching_cards =  set(other_player["cards"]).intersection(card_set)
+        matching_cards =  set(other_player["cards"]).intersection([card_set.character_name, card_set.room, card_set.weapon])
         if len(matching_cards) == 0:
             continue
         elif len(matching_cards) == 1:
             # TODO: not a real function yet
             turn_server.notify_players_of_rebutall(game_id, other_player["player_id"])
-            rebuttal = {"player_id": other_player["player_id"], "rebuttal_card": matching_cards.pop()}
+            rebuttal = {"player":{"player_id": other_player["player_id"], "character_name": other_player["character_name"]}, "card": matching_cards.pop()}
             return rebuttal
         else:
             # TODO: not a real function yet
@@ -108,13 +110,24 @@ def suggestion_move_player(game, card_set: CardSet):
 
     for player in game["players"]:
         if player["character_name"] == moved_character:
-            moved_player_id = player["player_id"]
+            moved_player_id = int(player["player_id"])
             break
     
-    board_controller.update_game_board_with_move(game, moved_player_id, moved_to_room)
+    board = game["board"]
+    moved_from_room = None
+    
+    # find the player's current location
+    for room_number, room in enumerate(board):
+        if moved_player_id in room:
+            moved_from_room = room_number
+            break
+    print(room_number, room)
+
+    if moved_player_id is not None:
+        board_controller.update_game_board_with_move(game, moved_player_id, moved_from_room, moved_to_room)
 
 
-def move_player(game_id, player_id, move):  # noqa: E501
+def move_player(game_id, player_id):  # noqa: E501
     """Create a new player move
 
      # noqa: E501
@@ -130,9 +143,11 @@ def move_player(game_id, player_id, move):  # noqa: E501
     """
     if connexion.request.is_json:
         move = Move.from_dict(connexion.request.get_json())  # noqa: E501
+    player_id = int(player_id)
     if board_controller.check_move(move.from_room, move.to_room):
-        board_controller.update_game_board_with_move(player_id)
+        board_controller.update_game_board_with_move(db.get_game(game_id), player_id, move.from_room, move.to_room)
     else:
+        print("illegal move")
         return 'illegal move'
 
 

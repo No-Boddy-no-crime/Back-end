@@ -29,7 +29,7 @@ def get_games_collection():
 
 
 def create_game(init = False):
-    if len(CURRENT_GAMES):
+    if len(CURRENT_GAMES) > 500:
         raise ValueError("Too many games")
     game_id = random.randint(0, 500)
     while game_id in CURRENT_GAMES:
@@ -68,7 +68,10 @@ def get_game(game_board_id = None):
 def delete_game(game_board_id):
     game_board_id = int(game_board_id)
     deleted = get_games_collection().delete_one({"game_board_id": game_board_id})
-    CURRENT_GAMES.remove(game_board_id)
+    try:
+        CURRENT_GAMES.remove(game_board_id)
+    except KeyError:
+        return
     if deleted.deleted_count == 0:
         raise ValueError("No game found")
     
@@ -135,19 +138,21 @@ def __insert_a_few_games():
         print(create_game())
 
 def main():
-    import pprint
-    pp = pprint.PrettyPrinter()
     __test_mongo()
-    games = get_games()
-    game = create_game(True)
-    game_id = game["game_board_id"]
-    player = create_player(game_board_id=game_id)
-    player_id = player["player_id"]
-    players = get_players(game_board_id=game_id)
-    print("Game")
-    pp.pprint(get_game(game_board_id=game_id))
-    print("Player")
-    pp.pprint(get_player(game_board_id=game_id, player_id=player_id))
+    __insert_a_few_games()
+    # import pprint
+    # pp = pprint.PrettyPrinter()
+    # __test_mongo()
+    # games = get_games()
+    # game = create_game(True)
+    # game_id = game["game_board_id"]
+    # player = create_player(game_board_id=game_id)
+    # player_id = player["player_id"]
+    # players = get_players(game_board_id=game_id)
+    # print("Game")
+    # pp.pprint(get_game(game_board_id=game_id))
+    # print("Player")
+    # pp.pprint(get_player(game_board_id=game_id, player_id=player_id))
 
 if __name__ == '__main__':
     main()

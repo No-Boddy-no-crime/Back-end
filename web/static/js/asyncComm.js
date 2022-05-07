@@ -6,9 +6,40 @@ const MILLISECONDS_IN_A = Object.freeze({SEC: 1000, MIN: 60000, HOUR: 3600000});
 
 /* sockets listening post */
 const initListeners = () => {
-	socket.on('connect', (msg) => appendServerResponse(msg))
-	socket.on('gameTurn', (msg) => console.log(msg))
-	socket.on('GameState', (msg) => updateGameState(msg))
+	socket.on('connect', (msg) => {
+		console.log('Connect'); 
+		appendServerResponse(msg);
+	});
+	socket.on('gameTurn', (msg) => {
+		console.log('GameTurn'); 
+		console.log(msg);
+	});
+	socket.on('GameState', (msg) => {
+		console.log('GameState'); 
+		updateGameState(msg);
+	})
+	socket.on('noRebuttal', (msg) => {
+		console.log('No Rebuttal'); 
+		appendServerResponse(msg);
+	})
+	socket.on('chooseRebuttalCard', (msg, cb) => {
+		console.log('chooseRebuttalCard'); 
+		chooseRebuttal(msg['cards'])
+		setTimeout( () => { cb(cleanUpCb()); }, 11000);
+		
+	})
+	socket.on('rebuttal', (msg) => {
+		console.log('rebuttal'); 
+		appendServerResponse(msg);
+	})
+	socket.on('GameOver', (msg) => {
+		console.log('GameOver'); 
+		appendServerResponse(msg);
+	})
+	socket.on('falseAccusation', (msg) => {
+		console.log('falseAccusation'); 
+		appendServerResponse(msg);
+	})
 }
 
 /* query server periodically */
@@ -41,3 +72,5 @@ const requestGameState = () => send('gameState')
 
 /* main query point */
 const send = (eventName, payload) => socket.emit(eventName, payload)
+
+//send('chooseRebuttalCard', {'wrench'})
